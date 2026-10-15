@@ -16,6 +16,7 @@ import type {
   DevinQuotaState,
   FloatboatQuotaState,
   KimiQuotaState,
+  LobsteraiServerQuotaState,
   MinimaxQuotaState,
   QoderCNQuotaState,
   TraeQuotaState,
@@ -34,6 +35,7 @@ export type QuotaProviderType =
   | 'codex'
   | 'devin'
   | 'floatboat'
+  | 'lobsterai-server'
   | 'kimi'
   | 'minimax'
   | 'qodercn'
@@ -51,6 +53,7 @@ export interface QuotaStore {
   codexQuota: Record<string, CodexQuotaState>;
   devinQuota: Record<string, DevinQuotaState>;
   floatboatQuota: Record<string, FloatboatQuotaState>;
+  lobsteraiServerQuota: Record<string, LobsteraiServerQuotaState>;
   kimiQuota: Record<string, KimiQuotaState>;
   minimaxQuota: Record<string, MinimaxQuotaState>;
   qoderCNQuota: Record<string, QoderCNQuotaState>;
@@ -65,6 +68,7 @@ export interface QuotaStore {
   setCodexQuota: (updater: QuotaUpdater<Record<string, CodexQuotaState>>) => void;
   setDevinQuota: (updater: QuotaUpdater<Record<string, DevinQuotaState>>) => void;
   setFloatboatQuota: (updater: QuotaUpdater<Record<string, FloatboatQuotaState>>) => void;
+  setLobsteraiServerQuota: (updater: QuotaUpdater<Record<string, LobsteraiServerQuotaState>>) => void;
   setKimiQuota: (updater: QuotaUpdater<Record<string, KimiQuotaState>>) => void;
   setMinimaxQuota: (updater: QuotaUpdater<Record<string, MinimaxQuotaState>>) => void;
   setQoderCNQuota: (updater: QuotaUpdater<Record<string, QoderCNQuotaState>>) => void;

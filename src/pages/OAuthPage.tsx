@@ -34,6 +34,7 @@ import iconTrae from '@/assets/icons/trae.png';
 import iconXiaohuanxiong from '@/assets/icons/xiaohuanxiong.svg';
 import iconCodeArts from '@/assets/icons/codearts.svg';
 import iconFloatboat from '@/assets/icons/floatboat.svg';
+import iconLobsteraiServer from '@/assets/icons/lobsterai.svg';
 import iconVertex from '@/assets/icons/vertex.svg';
 import iconGrok from '@/assets/icons/grok.svg';
 import iconGrokDark from '@/assets/icons/grok-dark.svg';
@@ -209,6 +210,12 @@ const PROVIDERS: BuiltInOAuthProviderCard[] = [
     titleKey: 'auth_login.floatboat_oauth_title',
     icon: iconFloatboat,
   },
+  {
+    kind: 'builtin',
+    id: 'lobsterai-server',
+    titleKey: 'auth_login.lobsterai_server_oauth_title',
+    icon: iconLobsteraiServer,
+  },
 ];
 
 const BUILTIN_PROVIDER_IDS = new Set<string>(PROVIDERS.map((provider) => provider.id));
@@ -231,6 +238,10 @@ const CALLBACK_SUPPORTED = new Set<string>([
   // FloatBoat returns the code on the desktop app's aoe:// deep link, which the
   // proxy cannot receive, so the user pastes the callback URL.
   'floatboat',
+  // LobsterAI redirects to a 127.0.0.1 loopback URL owned by the desktop client;
+  // the proxy's own loopback port is unreachable from a remote operator's
+  // browser, so the user pastes the callback URL.
+  'lobsterai-server',
 ]);
 const XAI_CALLBACK_URL = 'http://127.0.0.1:56121/callback';
 const SUCCESS_RESET_DELAY_MS = 5000;
@@ -372,6 +383,9 @@ const DEDICATED_CALLBACK_COPY = new Set<string>([
   // FloatBoat lands on an aoe:// deep link the proxy cannot receive; the card
   // needs provider-specific paste guidance.
   'floatboat',
+  // LobsterAI lands on a loopback callback the remote browser cannot hand to the
+  // proxy; the card needs provider-specific paste guidance.
+  'lobsterai-server',
 ]);
 
 const callbackTextKey = (

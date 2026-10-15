@@ -548,7 +548,6 @@
     "reset_confirm_button": "確認重置",
     "reset_not_confirmed": "尚未確認額度重置成功，請重新整理額度後再決定是否重試。",
     "reset_cooldown_failed": "額度已重置，但代理冷卻清除失敗。請在原連線的認證檔案頁面使用「清除冷卻」，不要再次消耗重置卡。",
-
     "reset_success": "已重置「{{name}}」的 Codex 配額",
     "reset_failed": "重置「{{name}}」的 Codex 配額失敗：{{message}}",
     "plan_plus": "Plus",
@@ -1219,7 +1218,21 @@
     "floatboat_open_link": "開啟連結",
     "floatboat_callback_label": "回調 URL",
     "floatboat_callback_hint": "登入後瀏覽器會跳轉到 aoe:// 位址，請複製網址列中的完整連結並貼上到此处。",
-    "floatboat_callback_placeholder": "aoe://auth/callback?code=...&state=..."
+    "floatboat_callback_placeholder": "aoe://auth/callback?code=...&state=...",
+    "lobsterai_server_oauth_title": "LobsterAI 登入",
+    "lobsterai_server_oauth_hint": "請在 LobsterAI（網易有道）入口網站登入。登入後瀏覽器會回到 http://127.0.0.1:18924/auth/callback —— 該連接埠沒有服務監聽，頁面會顯示無法連線，這是正常的。請從網址列複製完整位址並貼到下方。",
+    "lobsterai_server_oauth_button": "登入 LobsterAI",
+    "lobsterai_server_oauth_url_label": "授權連結：",
+    "lobsterai_server_oauth_polling_error": "檢查認證狀態失敗：",
+    "lobsterai_server_oauth_start_error": "發起 LobsterAI 登入失敗：",
+    "lobsterai_server_oauth_status_error": "認證失敗：",
+    "lobsterai_server_oauth_status_success": "認證成功！",
+    "lobsterai_server_oauth_status_waiting": "等待貼上回呼連結...",
+    "lobsterai_server_copy_link": "複製連結",
+    "lobsterai_server_open_link": "開啟連結",
+    "lobsterai_server_callback_label": "回呼 URL",
+    "lobsterai_server_callback_hint": "請從瀏覽器網址列複製完整的 http://127.0.0.1:18924/auth/callback?... 位址（頁面本身可能顯示無法連線），貼到這裡。",
+    "lobsterai_server_callback_placeholder": "http://127.0.0.1:18924/auth/callback?code=...&state=..."
   },
   "stats": {
     "success": "成功",
@@ -2686,5 +2699,28 @@
     "unavailable": "重置暫不可用。",
     "rate_limited": "請求過於頻繁。",
     "auth_error": "授權遭拒。"
+  },
+  "lobsterai_server_quota": {
+    "title": "LobsterAI 額度",
+    "empty_title": "暫無 LobsterAI 憑證",
+    "empty_desc": "登入 LobsterAI（網易有道）後可查看積分與每日簽到。",
+    "idle": "點擊查詢 LobsterAI 額度",
+    "loading": "正在查詢 LobsterAI 額度…",
+    "load_failed": "查詢額度失敗：{{message}}",
+    "missing_auth_index": "認證檔案缺少 auth_index",
+    "empty_data": "暫無額度資料",
+    "invalid_credential": "LobsterAI 憑證已失效，請重新登入。",
+    "quota_error": "無法讀取 LobsterAI 帳號額度。",
+    "plan_label": "方案",
+    "plan_free": "免費",
+    "plan_subscribed": "已訂閱",
+    "plan_unknown": "未知",
+    "credits_row": "積分",
+    "credits_unknown": "未知（未回報）",
+    "purchased_row": "已購積分",
+    "checkin_row": "每日簽到",
+    "checkin_available": "可簽到",
+    "checkin_none": "不可用",
+    "checkin_hint": "請在 LobsterAI 桌面客戶端內領取簽到獎勵，代理不會代為簽到。"
   }
 }

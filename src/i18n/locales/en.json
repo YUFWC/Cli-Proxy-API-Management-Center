@@ -1194,7 +1194,21 @@
     "floatboat_open_link": "Open link",
     "floatboat_callback_label": "Callback URL",
     "floatboat_callback_hint": "After signing in, the browser redirects to an aoe:// address. Copy that full URL from the address bar and paste it here.",
-    "floatboat_callback_placeholder": "aoe://auth/callback?code=...&state=..."
+    "floatboat_callback_placeholder": "aoe://auth/callback?code=...&state=...",
+    "lobsterai_server_oauth_title": "LobsterAI OAuth",
+    "lobsterai_server_oauth_hint": "Sign in on the LobsterAI (NetEase/Youdao) portal. After signing in the browser returns to http://127.0.0.1:18924/auth/callback — nothing is listening there, so the page shows a connection error. That is expected: copy the full address from the address bar and paste it below.",
+    "lobsterai_server_oauth_button": "Sign in to LobsterAI",
+    "lobsterai_server_oauth_url_label": "Authorization link:",
+    "lobsterai_server_oauth_polling_error": "Failed to check authentication status:",
+    "lobsterai_server_oauth_start_error": "Failed to start LobsterAI login:",
+    "lobsterai_server_oauth_status_error": "Authentication failed:",
+    "lobsterai_server_oauth_status_success": "Authentication succeeded!",
+    "lobsterai_server_oauth_status_waiting": "Waiting for the pasted callback link...",
+    "lobsterai_server_copy_link": "Copy link",
+    "lobsterai_server_open_link": "Open link",
+    "lobsterai_server_callback_label": "Callback URL",
+    "lobsterai_server_callback_hint": "Copy the full http://127.0.0.1:18924/auth/callback?... URL from the browser address bar (the page itself may show a connection error) and paste it here.",
+    "lobsterai_server_callback_placeholder": "http://127.0.0.1:18924/auth/callback?code=...&state=..."
   },
   "stats": {
     "success": "Success",
@@ -2661,5 +2675,28 @@
     "unavailable": "Resets are currently unavailable.",
     "rate_limited": "Request rate limited.",
     "auth_error": "Authorization was refused."
+  },
+  "lobsterai_server_quota": {
+    "title": "LobsterAI Quota",
+    "empty_title": "No LobsterAI credentials",
+    "empty_desc": "Sign in to LobsterAI (NetEase/Youdao) to view credits and the daily check-in.",
+    "idle": "Click to query LobsterAI quota",
+    "loading": "Querying LobsterAI quota…",
+    "load_failed": "Failed to query quota: {{message}}",
+    "missing_auth_index": "Auth file missing auth_index",
+    "empty_data": "No quota data available",
+    "invalid_credential": "The LobsterAI credential was rejected. Sign in again.",
+    "quota_error": "Could not read the LobsterAI account quota.",
+    "plan_label": "Plan",
+    "plan_free": "Free",
+    "plan_subscribed": "Subscribed",
+    "plan_unknown": "Unknown",
+    "credits_row": "Credits",
+    "credits_unknown": "Unknown (not reported)",
+    "purchased_row": "Purchased",
+    "checkin_row": "Daily check-in",
+    "checkin_available": "Available",
+    "checkin_none": "Not available",
+    "checkin_hint": "Claim the check-in reward in the LobsterAI desktop app; the proxy never claims it for you."
   }
 }

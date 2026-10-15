@@ -548,7 +548,6 @@
     "reset_confirm_button": "确认重置",
     "reset_not_confirmed": "未确认额度重置成功，请刷新额度后再决定是否重试。",
     "reset_cooldown_failed": "额度已重置，但代理冷却清除失败。请在原连接的认证文件页面使用“清除冷却”，不要再次消耗重置卡。",
-
     "reset_success": "已重置 \"{{name}}\" 的 Codex 额度",
     "reset_failed": "重置 \"{{name}}\" 的 Codex 额度失败：{{message}}",
     "plan_plus": "Plus",
@@ -1193,7 +1192,21 @@
     "floatboat_open_link": "打开链接",
     "floatboat_callback_label": "回调 URL",
     "floatboat_callback_hint": "登录后浏览器会跳转到 aoe:// 地址，请复制地址栏中的完整链接并粘贴到此处。",
-    "floatboat_callback_placeholder": "aoe://auth/callback?code=...&state=..."
+    "floatboat_callback_placeholder": "aoe://auth/callback?code=...&state=...",
+    "lobsterai_server_oauth_title": "LobsterAI 登录",
+    "lobsterai_server_oauth_hint": "请在 LobsterAI（网易有道）门户页登录。登录后浏览器会回到 http://127.0.0.1:18924/auth/callback —— 该端口没有服务监听，页面会显示无法连接，这是正常的。请从地址栏复制完整地址并粘贴到下方。",
+    "lobsterai_server_oauth_button": "登录 LobsterAI",
+    "lobsterai_server_oauth_url_label": "授权链接：",
+    "lobsterai_server_oauth_polling_error": "检查认证状态失败：",
+    "lobsterai_server_oauth_start_error": "发起 LobsterAI 登录失败：",
+    "lobsterai_server_oauth_status_error": "认证失败：",
+    "lobsterai_server_oauth_status_success": "认证成功！",
+    "lobsterai_server_oauth_status_waiting": "等待粘贴回调链接...",
+    "lobsterai_server_copy_link": "复制链接",
+    "lobsterai_server_open_link": "打开链接",
+    "lobsterai_server_callback_label": "回调 URL",
+    "lobsterai_server_callback_hint": "请从浏览器地址栏复制完整的 http://127.0.0.1:18924/auth/callback?... 地址（页面本身可能显示无法连接），粘贴到这里。",
+    "lobsterai_server_callback_placeholder": "http://127.0.0.1:18924/auth/callback?code=...&state=..."
   },
   "stats": {
     "success": "成功",
@@ -2660,5 +2673,28 @@
     "unavailable": "重置暂不可用。",
     "rate_limited": "请求过于频繁。",
     "auth_error": "授权被拒绝。"
+  },
+  "lobsterai_server_quota": {
+    "title": "LobsterAI 额度",
+    "empty_title": "暂无 LobsterAI 凭证",
+    "empty_desc": "登录 LobsterAI（网易有道）后可查看积分与每日签到。",
+    "idle": "点击查询 LobsterAI 额度",
+    "loading": "正在查询 LobsterAI 额度…",
+    "load_failed": "查询额度失败：{{message}}",
+    "missing_auth_index": "认证文件缺少 auth_index",
+    "empty_data": "暂无额度数据",
+    "invalid_credential": "LobsterAI 凭证已失效，请重新登录。",
+    "quota_error": "无法读取 LobsterAI 账号额度。",
+    "plan_label": "套餐",
+    "plan_free": "免费",
+    "plan_subscribed": "已订阅",
+    "plan_unknown": "未知",
+    "credits_row": "积分",
+    "credits_unknown": "未知（未上报）",
+    "purchased_row": "已购积分",
+    "checkin_row": "每日签到",
+    "checkin_available": "可签到",
+    "checkin_none": "不可用",
+    "checkin_hint": "请在 LobsterAI 桌面客户端内领取签到奖励，代理不会代为签到。"
   }
 }

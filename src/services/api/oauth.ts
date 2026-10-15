@@ -27,7 +27,8 @@ export type BuiltInOAuthProvider =
   | 'xiaohuanxiong'
   | 'codearts'
   | 'meta'
-  | 'floatboat';
+  | 'floatboat'
+  | 'lobsterai-server';
 
 export interface OAuthStartResponse {
   url: string;

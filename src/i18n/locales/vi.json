@@ -1194,7 +1194,21 @@
     "floatboat_open_link": "Mở liên kết",
     "floatboat_callback_label": "URL callback",
     "floatboat_callback_hint": "Sau khi đăng nhập, trình duyệt sẽ chuyển hướng đến địa chỉ aoe://. Hãy sao chép URL đầy đủ đó từ thanh địa chỉ và dán vào đây.",
-    "floatboat_callback_placeholder": "aoe://auth/callback?code=...&state=..."
+    "floatboat_callback_placeholder": "aoe://auth/callback?code=...&state=...",
+    "lobsterai_server_oauth_title": "Đăng nhập LobsterAI",
+    "lobsterai_server_oauth_hint": "Đăng nhập trên cổng LobsterAI (NetEase/Youdao). Sau khi đăng nhập, trình duyệt quay lại http://127.0.0.1:18924/auth/callback — không có dịch vụ lắng nghe ở cổng này nên trang sẽ báo lỗi kết nối, đây là bình thường. Hãy sao chép địa chỉ đầy đủ từ thanh địa chỉ và dán vào bên dưới.",
+    "lobsterai_server_oauth_button": "Đăng nhập LobsterAI",
+    "lobsterai_server_oauth_url_label": "Liên kết uỷ quyền:",
+    "lobsterai_server_oauth_polling_error": "Không kiểm tra được trạng thái xác thực:",
+    "lobsterai_server_oauth_start_error": "Không bắt đầu được đăng nhập LobsterAI:",
+    "lobsterai_server_oauth_status_error": "Xác thực thất bại:",
+    "lobsterai_server_oauth_status_success": "Xác thực thành công!",
+    "lobsterai_server_oauth_status_waiting": "Đang chờ liên kết callback được dán...",
+    "lobsterai_server_copy_link": "Sao chép liên kết",
+    "lobsterai_server_open_link": "Mở liên kết",
+    "lobsterai_server_callback_label": "URL callback",
+    "lobsterai_server_callback_hint": "Hãy sao chép URL đầy đủ http://127.0.0.1:18924/auth/callback?... từ thanh địa chỉ trình duyệt (trang có thể báo lỗi kết nối) và dán vào đây.",
+    "lobsterai_server_callback_placeholder": "http://127.0.0.1:18924/auth/callback?code=...&state=..."
   },
   "stats": {
     "success": "Thành công",
@@ -2667,5 +2681,28 @@
     "unavailable": "Tính năng đặt lại hiện không khả dụng.",
     "rate_limited": "Yêu cầu bị giới hạn tốc độ.",
     "auth_error": "Ủy quyền đã bị từ chối."
+  },
+  "lobsterai_server_quota": {
+    "title": "Hạn mức LobsterAI",
+    "empty_title": "Chưa có thông tin LobsterAI",
+    "empty_desc": "Đăng nhập LobsterAI (NetEase/Youdao) để xem tín dụng và điểm danh hằng ngày.",
+    "idle": "Nhấn để truy vấn hạn mức LobsterAI",
+    "loading": "Đang truy vấn hạn mức LobsterAI…",
+    "load_failed": "Truy vấn hạn mức thất bại: {{message}}",
+    "missing_auth_index": "Tệp xác thực thiếu auth_index",
+    "empty_data": "Không có dữ liệu hạn mức",
+    "invalid_credential": "Thông tin LobsterAI đã bị từ chối. Hãy đăng nhập lại.",
+    "quota_error": "Không đọc được hạn mức tài khoản LobsterAI.",
+    "plan_label": "Gói",
+    "plan_free": "Miễn phí",
+    "plan_subscribed": "Đã đăng ký",
+    "plan_unknown": "Không rõ",
+    "credits_row": "Tín dụng",
+    "credits_unknown": "Không rõ (chưa báo cáo)",
+    "purchased_row": "Đã mua",
+    "checkin_row": "Điểm danh hằng ngày",
+    "checkin_available": "Khả dụng",
+    "checkin_none": "Không khả dụng",
+    "checkin_hint": "Hãy nhận thưởng điểm danh trong ứng dụng LobsterAI; proxy không nhận thay bạn."
   }
 }

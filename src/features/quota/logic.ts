@@ -11,6 +11,7 @@ import { CODEBUDDY_CONFIG } from './providers/codebuddy/data';
 import { CODEX_CONFIG } from './providers/codex/data';
 import { DEVIN_CONFIG } from './providers/devin/data';
 import { FLOATBOAT_CONFIG } from './providers/floatboat/data';
+import { LOBSTERAI_SERVER_CONFIG } from './providers/lobsteraiserver/data';
 import { KIMI_CONFIG } from './providers/kimi/data';
 import { QODERCN_CONFIG } from './providers/qodercn/data';
 import { MINIMAX_CONFIG } from './providers/minimax/data';
@@ -29,6 +30,7 @@ const QUOTA_FILTER_MAP: Record<QuotaProviderType, (file: AuthFileItem) => boolea
   codex: CODEX_CONFIG.filterFn,
   devin: DEVIN_CONFIG.filterFn,
   floatboat: FLOATBOAT_CONFIG.filterFn,
+  'lobsterai-server': LOBSTERAI_SERVER_CONFIG.filterFn,
   kimi: KIMI_CONFIG.filterFn,
   minimax: MINIMAX_CONFIG.filterFn,
   qodercn: QODERCN_CONFIG.filterFn,

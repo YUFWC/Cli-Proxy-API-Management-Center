@@ -1194,7 +1194,21 @@
     "floatboat_open_link": "링크 열기",
     "floatboat_callback_label": "콜백 URL",
     "floatboat_callback_hint": "로그인하면 브라우저가 aoe:// 주소로 리디렉션됩니다. 주소창에서 해당 전체 URL을 복사하여 여기에 붙여넣으세요.",
-    "floatboat_callback_placeholder": "aoe://auth/callback?code=...&state=..."
+    "floatboat_callback_placeholder": "aoe://auth/callback?code=...&state=...",
+    "lobsterai_server_oauth_title": "LobsterAI 로그인",
+    "lobsterai_server_oauth_hint": "LobsterAI(NetEase/Youdao) 포털에서 로그인하세요. 로그인 후 브라우저는 http://127.0.0.1:18924/auth/callback 으로 돌아오지만 이 포트에는 리스너가 없어 연결 오류가 표시됩니다(정상). 주소 표시줄에서 전체 주소를 복사해 아래에 붙여넣으세요.",
+    "lobsterai_server_oauth_button": "LobsterAI 로그인",
+    "lobsterai_server_oauth_url_label": "인증 링크:",
+    "lobsterai_server_oauth_polling_error": "인증 상태 확인 실패:",
+    "lobsterai_server_oauth_start_error": "LobsterAI 로그인 시작 실패:",
+    "lobsterai_server_oauth_status_error": "인증 실패:",
+    "lobsterai_server_oauth_status_success": "인증 성공!",
+    "lobsterai_server_oauth_status_waiting": "붙여넣은 콜백 링크를 기다리는 중...",
+    "lobsterai_server_copy_link": "링크 복사",
+    "lobsterai_server_open_link": "링크 열기",
+    "lobsterai_server_callback_label": "콜백 URL",
+    "lobsterai_server_callback_hint": "브라우저 주소 표시줄에서 전체 http://127.0.0.1:18924/auth/callback?... 주소를 복사해(페이지에 연결 오류가 보일 수 있습니다) 여기에 붙여넣으세요.",
+    "lobsterai_server_callback_placeholder": "http://127.0.0.1:18924/auth/callback?code=...&state=..."
   },
   "stats": {
     "success": "성공",
@@ -2661,5 +2675,28 @@
     "unavailable": "현재 초기화를 사용할 수 없습니다.",
     "rate_limited": "요청 속도가 제한되었습니다.",
     "auth_error": "인증이 거부되었습니다."
+  },
+  "lobsterai_server_quota": {
+    "title": "LobsterAI 할당량",
+    "empty_title": "LobsterAI 자격 증명 없음",
+    "empty_desc": "LobsterAI(NetEase/Youdao)에 로그인하면 크레딧과 일일 출석을 볼 수 있습니다.",
+    "idle": "LobsterAI 할당량을 조회하려면 클릭",
+    "loading": "LobsterAI 할당량 조회 중…",
+    "load_failed": "할당량 조회 실패: {{message}}",
+    "missing_auth_index": "인증 파일에 auth_index가 없습니다",
+    "empty_data": "할당량 데이터가 없습니다",
+    "invalid_credential": "LobsterAI 자격 증명이 거부되었습니다. 다시 로그인하세요.",
+    "quota_error": "LobsterAI 계정 할당량을 읽을 수 없습니다.",
+    "plan_label": "요금제",
+    "plan_free": "무료",
+    "plan_subscribed": "구독 중",
+    "plan_unknown": "알 수 없음",
+    "credits_row": "크레딧",
+    "credits_unknown": "알 수 없음(미보고)",
+    "purchased_row": "구매 크레딧",
+    "checkin_row": "일일 출석",
+    "checkin_available": "가능",
+    "checkin_none": "불가",
+    "checkin_hint": "출석 보상은 LobsterAI 데스크톱 앱에서 수령하세요. 프록시는 대신 수령하지 않습니다."
   }
 }

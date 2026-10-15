@@ -89,6 +89,10 @@ export function isFloatboatFile(file: AuthFileItem): boolean {
   return resolveAuthProvider(file) === 'floatboat';
 }
 
+export function isLobsteraiServerFile(file: AuthFileItem): boolean {
+  return resolveAuthProvider(file) === 'lobsterai-server';
+}
+
 export function isDisabledAuthFile(file: AuthFileItem): boolean {
   const raw = (file as { disabled?: unknown }).disabled;
   if (typeof raw === 'boolean') return raw;

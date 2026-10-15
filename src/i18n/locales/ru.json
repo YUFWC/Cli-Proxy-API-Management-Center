@@ -1197,7 +1197,21 @@
     "floatboat_open_link": "Открыть ссылку",
     "floatboat_callback_label": "Callback URL",
     "floatboat_callback_hint": "После входа браузер перенаправляет на адрес aoe://. Скопируйте полный URL из адресной строки и вставьте его сюда.",
-    "floatboat_callback_placeholder": "aoe://auth/callback?code=...&state=..."
+    "floatboat_callback_placeholder": "aoe://auth/callback?code=...&state=...",
+    "lobsterai_server_oauth_title": "Вход LobsterAI",
+    "lobsterai_server_oauth_hint": "Войдите на портале LobsterAI (NetEase/Youdao). После входа браузер вернётся на http://127.0.0.1:18924/auth/callback — на этом порту никто не слушает, поэтому страница покажет ошибку соединения. Это ожидаемо: скопируйте полный адрес из адресной строки и вставьте его ниже.",
+    "lobsterai_server_oauth_button": "Войти в LobsterAI",
+    "lobsterai_server_oauth_url_label": "Ссылка авторизации:",
+    "lobsterai_server_oauth_polling_error": "Не удалось проверить статус аутентификации:",
+    "lobsterai_server_oauth_start_error": "Не удалось начать вход в LobsterAI:",
+    "lobsterai_server_oauth_status_error": "Ошибка аутентификации:",
+    "lobsterai_server_oauth_status_success": "Аутентификация успешна!",
+    "lobsterai_server_oauth_status_waiting": "Ожидание вставленной ссылки обратного вызова...",
+    "lobsterai_server_copy_link": "Копировать ссылку",
+    "lobsterai_server_open_link": "Открыть ссылку",
+    "lobsterai_server_callback_label": "URL обратного вызова",
+    "lobsterai_server_callback_hint": "Скопируйте полный URL http://127.0.0.1:18924/auth/callback?... из адресной строки браузера (сама страница может показать ошибку соединения) и вставьте его сюда.",
+    "lobsterai_server_callback_placeholder": "http://127.0.0.1:18924/auth/callback?code=...&state=..."
   },
   "stats": {
     "success": "Успех",
@@ -2655,5 +2669,28 @@
     "unavailable": "Сбросы временно недоступны.",
     "rate_limited": "Слишком много запросов.",
     "auth_error": "Авторизация отклонена."
+  },
+  "lobsterai_server_quota": {
+    "title": "Квота LobsterAI",
+    "empty_title": "Нет учётных данных LobsterAI",
+    "empty_desc": "Войдите в LobsterAI (NetEase/Youdao), чтобы увидеть кредиты и ежедневную отметку.",
+    "idle": "Нажмите, чтобы запросить квоту LobsterAI",
+    "loading": "Запрос квоты LobsterAI…",
+    "load_failed": "Не удалось запросить квоту: {{message}}",
+    "missing_auth_index": "В файле авторизации нет auth_index",
+    "empty_data": "Нет данных о квоте",
+    "invalid_credential": "Учётные данные LobsterAI отклонены. Войдите снова.",
+    "quota_error": "Не удалось прочитать квоту учётной записи LobsterAI.",
+    "plan_label": "План",
+    "plan_free": "Бесплатный",
+    "plan_subscribed": "Подписка",
+    "plan_unknown": "Неизвестно",
+    "credits_row": "Кредиты",
+    "credits_unknown": "Неизвестно (не сообщено)",
+    "purchased_row": "Купленные",
+    "checkin_row": "Ежедневная отметка",
+    "checkin_available": "Доступна",
+    "checkin_none": "Недоступна",
+    "checkin_hint": "Получите награду за отметку в настольном приложении LobsterAI; прокси не делает это за вас."
   }
 }

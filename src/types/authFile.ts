@@ -17,6 +17,7 @@ export type AuthFileType =
   | 'antigravity'
   | 'xai'
   | 'floatboat'
+  | 'lobsterai-server'
   | 'iflow'
   | 'vertex'
   | 'empty'

@@ -689,3 +689,35 @@ export interface FloatboatQuotaState {
   error?: string;
   errorStatus?: number;
 }
+
+// LobsterAI (NetEase/Youdao) quota: the account backend's credit/plan snapshot.
+//
+// The backend reports a credit balance and the read-only state of its daily
+// check-in activity. This is neither usage accounting nor scheduler cooldown,
+// and the proxy never claims the check-in reward on the account's behalf.
+// A balance the backend did not report stays unknown: `creditsKnown` is false
+// and the card renders "--" rather than a fabricated zero or "unlimited".
+export interface LobsteraiServerQuotaActivity {
+  /** True when a check-in / credit activity slot is currently open. */
+  available: boolean;
+  /** Activity identifier (e.g. "daily_check_in") when available. */
+  code?: string;
+  /** Activity template when the backend reports one. */
+  template?: string;
+  /** Slot placement the read targeted. */
+  placement?: string;
+  /** Raw read-only activity context payload, when any. */
+  context?: Record<string, unknown>;
+}
+
+export interface LobsteraiServerQuotaState {
+  status: 'idle' | 'loading' | 'success' | 'error';
+  subscriptionStatus?: string;
+  credits?: number;
+  /** False when the backend omitted the credit balance. */
+  creditsKnown?: boolean;
+  purchasedCredits?: number;
+  activity?: LobsteraiServerQuotaActivity;
+  error?: string;
+  errorStatus?: number;
+}
