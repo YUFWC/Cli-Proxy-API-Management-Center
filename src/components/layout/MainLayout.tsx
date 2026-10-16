@@ -678,6 +678,12 @@ export function MainLayout() {
           metaKey: 'nav_meta.config_management',
           icon: sidebarIcons.config,
         },
+        {
+          path: '/auto-checkin',
+          labelKey: 'auto_checkin.title',
+          metaKey: 'auto_checkin.nav_meta',
+          icon: sidebarIcons.quota,
+        },
         ...(supportsPlugin
           ? [
               {
