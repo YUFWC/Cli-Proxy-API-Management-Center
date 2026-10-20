@@ -22,6 +22,8 @@ import { CodeArtsQuotaBody } from './codearts/CodeArtsQuotaBody';
 import { DEVIN_CONFIG } from './devin/data';
 import { FLOATBOAT_CONFIG } from './floatboat/data';
 import { FloatboatQuotaBody } from './floatboat/FloatboatQuotaBody';
+import { LOOMY_CONFIG } from './loomy/data';
+import { LoomyQuotaBody } from './loomy/LoomyQuotaBody';
 import { LOBSTERAI_SERVER_CONFIG } from './lobsteraiserver/data';
 import { LobsteraiServerQuotaBody } from './lobsteraiserver/LobsteraiServerQuotaBody';
 import { DevinQuotaBody } from './devin/DevinQuotaBody'
@@ -75,6 +77,7 @@ export const QUOTA_ADAPTERS: Record<QuotaProviderType, QuotaAdapter> = {
   devin: { ...DEVIN_CONFIG, Body: DevinQuotaBody } as unknown as QuotaAdapter,
   floatboat: { ...FLOATBOAT_CONFIG, Body: FloatboatQuotaBody } as unknown as QuotaAdapter,
   'lobsterai-server': { ...LOBSTERAI_SERVER_CONFIG, Body: LobsteraiServerQuotaBody } as unknown as QuotaAdapter,
+  loomy: { ...LOOMY_CONFIG, Body: LoomyQuotaBody } as unknown as QuotaAdapter,
   kimi: { ...KIMI_CONFIG, Body: KimiQuotaBody } as unknown as QuotaAdapter,
   qodercn: { ...QODERCN_CONFIG, Body: QoderCNQuotaBody } as unknown as QuotaAdapter,
   minimax: { ...MINIMAX_CONFIG, Body: MinimaxQuotaBody } as unknown as QuotaAdapter,

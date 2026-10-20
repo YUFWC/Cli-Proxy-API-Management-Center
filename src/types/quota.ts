@@ -690,6 +690,27 @@ export interface FloatboatQuotaState {
   errorStatus?: number;
 }
 
+// Loomy (讯飞 Loomy) quota: the account's two points pools.
+//
+// Loomy keeps a permanent pool and a daily allowance that does not refill after
+// consumption. `dailyQuota`/`dailyConsumed` are optional because the read-only
+// endpoint does not report the daily window at all; an absent value means
+// unknown and must never be rendered as zero. This snapshot is neither usage
+// accounting nor scheduler cooldown.
+export interface LoomyQuotaState {
+  status: 'idle' | 'loading' | 'success' | 'error';
+  permanent?: number;
+  daily?: number;
+  total?: number;
+  /** Absent when the read endpoint did not report the daily cap. */
+  dailyQuota?: number;
+  /** Absent when the read endpoint did not report today's consumption. */
+  dailyConsumed?: number;
+  dailyCycleDate?: string;
+  error?: string;
+  errorStatus?: number;
+}
+
 // LobsterAI (NetEase/Youdao) quota: the account backend's credit/plan snapshot.
 //
 // The backend reports a credit balance and the read-only state of its daily

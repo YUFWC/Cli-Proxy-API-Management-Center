@@ -18,6 +18,7 @@ import iconTrae from '@/assets/icons/trae.png';
 import iconVertex from '@/assets/icons/vertex.svg';
 import iconXiaohuanxiong from '@/assets/icons/xiaohuanxiong.svg';
 import iconCodeArts from '@/assets/icons/codearts.svg';
+import iconLoomy from '@/assets/icons/loomy.svg';
 import iconCline from '@/assets/icons/cline.png';
 import iconMinimax from '@/assets/icons/minimax.svg';
 import type { AuthFileItem, ResolvedTheme, ThemeColors } from '@/types';
@@ -112,6 +113,7 @@ export const AUTH_FILE_ICONS: Record<string, AuthFileIconAsset> = {
   antigravity: iconAntigravity,
   xiaohuanxiong: iconXiaohuanxiong,
   codearts: iconCodeArts,
+  loomy: iconLoomy,
   trae: iconTrae,
   aistudio: iconGemini,
   claude: iconClaude,

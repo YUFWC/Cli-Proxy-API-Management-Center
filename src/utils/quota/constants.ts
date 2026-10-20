@@ -66,6 +66,10 @@ export const TYPE_COLORS: Record<string, TypeColorSet> = {
     light: { bg: '#f5e3fc', text: '#9025c8' },
     dark: { bg: '#521490', text: '#d49cf5' },
   },
+  loomy: {
+    light: { bg: '#e8f1ff', text: '#1a4fbf' },
+    dark: { bg: '#12305f', text: '#9cc4ff' },
+  },
   vertex: {
     light: { bg: '#e4edfd', text: '#2b5fbc' },
     dark: { bg: '#1a3d80', text: '#89b3f7' },

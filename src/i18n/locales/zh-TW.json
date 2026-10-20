@@ -510,7 +510,8 @@
     "filter_xiaohuanxiong": "商湯小浣熊",
     "filter_codearts": "華為雲 CodeArts",
     "filter_minimax": "MiniMax Code",
-    "filter_minimax-cn": "MiniMax Code（國內版）"
+    "filter_minimax-cn": "MiniMax Code（國內版）",
+    "filter_loomy": "Loomy"
   },
   "antigravity_subscription": {
     "plan_unknown": "未知",
@@ -1299,7 +1300,25 @@
     "lobsterai_server_open_link": "開啟連結",
     "lobsterai_server_callback_label": "回呼 URL",
     "lobsterai_server_callback_hint": "請從瀏覽器網址列複製完整的 http://127.0.0.1:18924/auth/callback?... 位址（頁面本身可能顯示無法連線），貼到這裡。",
-    "lobsterai_server_callback_placeholder": "http://127.0.0.1:18924/auth/callback?code=...&state=..."
+    "lobsterai_server_callback_placeholder": "http://127.0.0.1:18924/auth/callback?code=...&state=...",
+    "loomy_phone_label": "手機號碼",
+    "loomy_phone_hint": "中國大陸手機號碼，11 位，不含國碼。",
+    "loomy_phone_placeholder": "13800000000",
+    "loomy_send_code": "取得驗證碼",
+    "loomy_code_label": "簡訊驗證碼",
+    "loomy_code_hint": "填寫簡訊收到的驗證碼，有效期 5 分鐘。",
+    "loomy_code_placeholder": "123456",
+    "loomy_submit": "登入",
+    "loomy_login_error": "登入失敗：",
+    "loomy_missing_phone": "請先填寫手機號碼。",
+    "loomy_missing_code": "請填寫簡訊驗證碼。",
+    "loomy_oauth_title": "Loomy（訊飛）登入",
+    "loomy_oauth_hint": "Loomy 使用手機驗證碼登入，沒有瀏覽器授權頁。填寫手機號碼、取得驗證碼並提交即可；登入有效期為 14 天且無法續期，過期後需重新登入。",
+    "loomy_oauth_status_waiting": "等待簡訊驗證碼…",
+    "loomy_oauth_status_success": "登入成功！",
+    "loomy_oauth_status_error": "登入失敗：",
+    "loomy_oauth_start_error": "發送驗證碼失敗：",
+    "loomy_resend_code": "重新取得"
   },
   "stats": {
     "success": "成功",
@@ -2789,5 +2808,22 @@
     "checkin_available": "可簽到",
     "checkin_none": "不可用",
     "checkin_hint": "請在 LobsterAI 桌面客戶端內領取簽到獎勵，代理不會代為簽到。"
+  },
+  "loomy_quota": {
+    "title": "Loomy 額度",
+    "empty_title": "沒有 Loomy 憑證",
+    "empty_desc": "登入 Loomy（訊飛）後即可查看積分餘額。",
+    "idle": "點擊查詢 Loomy 額度",
+    "loading": "正在查詢 Loomy 額度…",
+    "load_failed": "查詢額度失敗：{{message}}",
+    "missing_auth_index": "憑證缺少 auth_index",
+    "empty_data": "暫無額度資料",
+    "invalid_credential": "Loomy 憑證已失效，請重新登入。",
+    "quota_error": "無法讀取 Loomy 帳戶餘額。",
+    "total_row": "總積分",
+    "permanent_row": "永久積分",
+    "daily_row": "每日贈送",
+    "daily_consumed_row": "今日已消耗",
+    "daily_hint": "每日贈送額度按業務日發放，消耗後不回補。"
   }
 }

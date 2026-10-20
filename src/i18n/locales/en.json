@@ -512,7 +512,8 @@
     "filter_xiaohuanxiong": "Xiaohuanxiong (Raccoon)",
     "filter_codearts": "CodeArts (Huawei)",
     "filter_minimax": "MiniMax Code",
-    "filter_minimax-cn": "MiniMax Code (CN)"
+    "filter_minimax-cn": "MiniMax Code (CN)",
+    "filter_loomy": "Loomy"
   },
   "antigravity_subscription": {
     "plan_unknown": "Unknown",
@@ -1275,7 +1276,25 @@
     "lobsterai_server_open_link": "Open link",
     "lobsterai_server_callback_label": "Callback URL",
     "lobsterai_server_callback_hint": "Copy the full http://127.0.0.1:18924/auth/callback?... URL from the browser address bar (the page itself may show a connection error) and paste it here.",
-    "lobsterai_server_callback_placeholder": "http://127.0.0.1:18924/auth/callback?code=...&state=..."
+    "lobsterai_server_callback_placeholder": "http://127.0.0.1:18924/auth/callback?code=...&state=...",
+    "loomy_phone_label": "Phone number",
+    "loomy_phone_hint": "Mainland China mobile number, 11 digits, without the country code.",
+    "loomy_phone_placeholder": "13800000000",
+    "loomy_send_code": "Send code",
+    "loomy_code_label": "SMS verification code",
+    "loomy_code_hint": "Enter the code the SMS delivered; it expires in five minutes.",
+    "loomy_code_placeholder": "123456",
+    "loomy_submit": "Sign in",
+    "loomy_login_error": "Failed to sign in:",
+    "loomy_missing_phone": "Enter a phone number first.",
+    "loomy_missing_code": "Enter the SMS verification code.",
+    "loomy_oauth_title": "Loomy (讯飞) OAuth",
+    "loomy_oauth_hint": "Loomy signs in with a phone verification code rather than a browser page. Enter the phone number, request a code, then submit it. The session is issued for 14 days and cannot be renewed, so sign in again when it expires.",
+    "loomy_oauth_status_waiting": "Waiting for the SMS code…",
+    "loomy_oauth_status_success": "Authentication succeeded!",
+    "loomy_oauth_status_error": "Authentication failed:",
+    "loomy_oauth_start_error": "Failed to send the SMS code:",
+    "loomy_resend_code": "Resend code"
   },
   "stats": {
     "success": "Success",
@@ -2765,5 +2784,22 @@
     "checkin_available": "Available",
     "checkin_none": "Not available",
     "checkin_hint": "Claim the check-in reward in the LobsterAI desktop app; the proxy never claims it for you."
+  },
+  "loomy_quota": {
+    "title": "Loomy Quota",
+    "empty_title": "No Loomy credentials",
+    "empty_desc": "Sign in to Loomy (讯飞) to view its points balances.",
+    "idle": "Click to query Loomy quota",
+    "loading": "Querying Loomy quota…",
+    "load_failed": "Failed to query quota: {{message}}",
+    "missing_auth_index": "Auth file missing auth_index",
+    "empty_data": "No quota data available",
+    "invalid_credential": "The Loomy credential was rejected. Sign in again.",
+    "quota_error": "Could not read the Loomy account balance.",
+    "total_row": "Total points",
+    "permanent_row": "Permanent points",
+    "daily_row": "Daily allowance",
+    "daily_consumed_row": "Daily consumed",
+    "daily_hint": "The daily allowance is granted per business day and does not refill after consumption."
   }
 }

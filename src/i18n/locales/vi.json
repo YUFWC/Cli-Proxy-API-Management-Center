@@ -512,7 +512,8 @@
     "filter_xiaohuanxiong": "Xiaohuanxiong (Gấu mèo)",
     "filter_codearts": "CodeArts (Huawei Cloud)",
     "filter_minimax": "MiniMax Code",
-    "filter_minimax-cn": "MiniMax Code (Trung Quốc)"
+    "filter_minimax-cn": "MiniMax Code (Trung Quốc)",
+    "filter_loomy": "Loomy"
   },
   "antigravity_subscription": {
     "plan_unknown": "Không rõ",
@@ -1275,7 +1276,25 @@
     "lobsterai_server_open_link": "Mở liên kết",
     "lobsterai_server_callback_label": "URL callback",
     "lobsterai_server_callback_hint": "Hãy sao chép URL đầy đủ http://127.0.0.1:18924/auth/callback?... từ thanh địa chỉ trình duyệt (trang có thể báo lỗi kết nối) và dán vào đây.",
-    "lobsterai_server_callback_placeholder": "http://127.0.0.1:18924/auth/callback?code=...&state=..."
+    "lobsterai_server_callback_placeholder": "http://127.0.0.1:18924/auth/callback?code=...&state=...",
+    "loomy_phone_label": "Số điện thoại",
+    "loomy_phone_hint": "Số di động Trung Quốc đại lục, 11 chữ số, không kèm mã quốc gia.",
+    "loomy_phone_placeholder": "13800000000",
+    "loomy_send_code": "Gửi mã",
+    "loomy_code_label": "Mã xác minh SMS",
+    "loomy_code_hint": "Nhập mã nhận được trong SMS; mã có hiệu lực năm phút.",
+    "loomy_code_placeholder": "123456",
+    "loomy_submit": "Đăng nhập",
+    "loomy_login_error": "Không đăng nhập được:",
+    "loomy_missing_phone": "Hãy nhập số điện thoại trước.",
+    "loomy_missing_code": "Hãy nhập mã xác minh SMS.",
+    "loomy_oauth_title": "Đăng nhập Loomy (讯飞)",
+    "loomy_oauth_hint": "Loomy đăng nhập bằng mã xác minh qua SMS, không có trang uỷ quyền trên trình duyệt. Nhập số điện thoại, yêu cầu mã rồi gửi mã. Phiên có hiệu lực 14 ngày và không thể gia hạn, nên khi hết hạn phải đăng nhập lại.",
+    "loomy_oauth_status_waiting": "Đang chờ mã SMS…",
+    "loomy_oauth_status_success": "Xác thực thành công!",
+    "loomy_oauth_status_error": "Xác thực thất bại:",
+    "loomy_oauth_start_error": "Không gửi được mã:",
+    "loomy_resend_code": "Gửi lại mã"
   },
   "stats": {
     "success": "Thành công",
@@ -2771,5 +2790,22 @@
     "checkin_available": "Khả dụng",
     "checkin_none": "Không khả dụng",
     "checkin_hint": "Hãy nhận thưởng điểm danh trong ứng dụng LobsterAI; proxy không nhận thay bạn."
+  },
+  "loomy_quota": {
+    "title": "Hạn mức Loomy",
+    "empty_title": "Không có thông tin Loomy",
+    "empty_desc": "Đăng nhập Loomy (讯飞) để xem số dư điểm.",
+    "idle": "Nhấn để truy vấn hạn mức Loomy",
+    "loading": "Đang truy vấn hạn mức Loomy…",
+    "load_failed": "Truy vấn hạn mức thất bại: {{message}}",
+    "missing_auth_index": "Tệp thông tin thiếu auth_index",
+    "empty_data": "Không có dữ liệu hạn mức",
+    "invalid_credential": "Thông tin Loomy bị từ chối. Hãy đăng nhập lại.",
+    "quota_error": "Không đọc được số dư tài khoản Loomy.",
+    "total_row": "Tổng điểm",
+    "permanent_row": "Điểm vĩnh viễn",
+    "daily_row": "Hạn mức hằng ngày",
+    "daily_consumed_row": "Đã dùng hôm nay",
+    "daily_hint": "Hạn mức hằng ngày được cấp theo ngày làm việc và không hoàn lại sau khi dùng."
   }
 }

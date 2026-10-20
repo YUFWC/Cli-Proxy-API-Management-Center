@@ -93,6 +93,14 @@ export function isLobsteraiServerFile(file: AuthFileItem): boolean {
   return resolveAuthProvider(file) === 'lobsterai-server';
 }
 
+/**
+ * Loomy credentials reach the quota page as a bare `loomy` provider (the auth
+ * file's `type`), matching how the provider key is registered.
+ */
+export function isLoomyFile(file: AuthFileItem): boolean {
+  return resolveAuthProvider(file) === 'loomy';
+}
+
 export function isDisabledAuthFile(file: AuthFileItem): boolean {
   const raw = (file as { disabled?: unknown }).disabled;
   if (typeof raw === 'boolean') return raw;

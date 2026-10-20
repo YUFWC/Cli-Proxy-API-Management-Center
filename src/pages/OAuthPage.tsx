@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/Input';
 import { IconPlug } from '@/components/ui/icons';
 import { useAuthStore, useNotificationStore, useThemeStore } from '@/stores';
 import { oauthApi, pluginsApi, type BuiltInOAuthProvider } from '@/services/api';
+import { loomyApi } from '@/services/api/loomy';
 import { vertexApi, type VertexImportResponse } from '@/services/api/vertex';
 import { copyToClipboard } from '@/utils/clipboard';
 import { getErrorMessage, isRecord } from '@/utils/helpers';
@@ -35,6 +36,7 @@ import iconXiaohuanxiong from '@/assets/icons/xiaohuanxiong.svg';
 import iconCodeArts from '@/assets/icons/codearts.svg';
 import iconFloatboat from '@/assets/icons/floatboat.svg';
 import iconLobsteraiServer from '@/assets/icons/lobsterai.svg';
+import iconLoomy from '@/assets/icons/loomy.svg';
 import iconVertex from '@/assets/icons/vertex.svg';
 import iconGrok from '@/assets/icons/grok.svg';
 import iconGrokDark from '@/assets/icons/grok-dark.svg';
@@ -56,6 +58,14 @@ interface ProviderState {
   callbackError?: string;
   machineId?: string;
   deviceId?: string;
+  /** Loomy SMS flow: the phone number the code was sent to. */
+  phone?: string;
+  /** Loomy SMS flow: the msg_id that must accompany the code. */
+  msgId?: string;
+  /** Loomy SMS flow: the code the operator is about to submit. */
+  code?: string;
+  /** Loomy SMS flow: the send step is in flight. */
+  smsBusy?: boolean;
 }
 
 interface VertexImportResult {
@@ -215,6 +225,12 @@ const PROVIDERS: BuiltInOAuthProviderCard[] = [
     id: 'lobsterai-server',
     titleKey: 'auth_login.lobsterai_server_oauth_title',
     icon: iconLobsteraiServer,
+  },
+  {
+    kind: 'builtin',
+    id: 'loomy',
+    titleKey: 'auth_login.loomy_oauth_title',
+    icon: iconLoomy,
   },
 ];
 
@@ -602,6 +618,11 @@ export function OAuthPage() {
     // A network error can stop polling while the server is still waiting. Require
     // explicit cancellation before replacing that Devin session.
     if (provider === 'devin' && states[provider]?.state) return;
+    // Loomy has no URL-based start: its card runs the SMS steps instead.
+    if (provider === 'loomy') {
+      await sendLoomyCode(provider);
+      return;
+    }
     const attempt = attempts.current.begin(provider);
     updateProviderState(provider, {
       url: undefined,
@@ -844,6 +865,74 @@ export function OAuthPage() {
     }
   };
 
+  /**
+   * Loomy step 1: request an SMS code. The response carries only a msg_id, which
+   * the login step must echo back; nothing here is a credential.
+   */
+  const sendLoomyCode = async (provider: string) => {
+    const phone = (states[provider]?.phone || '').trim();
+    if (!phone) {
+      showNotification(t('auth_login.loomy_missing_phone'), 'warning');
+      return;
+    }
+    const attempt = attempts.current.begin(provider);
+    updateProviderState(provider, {
+      smsBusy: true,
+      status: 'waiting',
+      error: undefined,
+      msgId: undefined,
+      code: '',
+    });
+    try {
+      const res = await loomyApi.requestSMSCode(phone, attempt.signal);
+      if (!attempt.isCurrent()) return;
+      updateProviderState(provider, { smsBusy: false, msgId: res.msg_id });
+    } catch (err: unknown) {
+      if (!attempt.isCurrent()) return;
+      const message = getErrorMessage(err);
+      updateProviderState(provider, { smsBusy: false, status: 'error', error: message });
+      showNotification(
+        `${t('auth_login.loomy_start_error')}${message ? ` ${message}` : ''}`,
+        'error'
+      );
+    }
+  };
+
+  /**
+   * Loomy step 2: submit the code. The backend persists the session and returns
+   * only the auth file id, so no credential enters the page.
+   */
+  const submitLoomyCode = async (provider: string) => {
+    const state = states[provider];
+    const phone = (state?.phone || '').trim();
+    const code = (state?.code || '').trim();
+    const msgId = (state?.msgId || '').trim();
+    if (!msgId) {
+      showNotification(t('auth_login.loomy_missing_phone'), 'warning');
+      return;
+    }
+    if (!code) {
+      showNotification(t('auth_login.loomy_missing_code'), 'warning');
+      return;
+    }
+    const attempt = attempts.current.begin(provider);
+    updateProviderState(provider, { polling: true, status: 'waiting', error: undefined });
+    try {
+      await loomyApi.login(phone, code, msgId, attempt.signal);
+      if (!attempt.isCurrent()) return;
+      completeProviderAuth(provider);
+      showNotification(t('auth_login.loomy_oauth_status_success'), 'success');
+    } catch (err: unknown) {
+      if (!attempt.isCurrent()) return;
+      const message = getErrorMessage(err);
+      updateProviderState(provider, { polling: false, status: 'error', error: message });
+      showNotification(
+        `${t('auth_login.loomy_login_error')}${message ? ` ${message}` : ''}`,
+        'error'
+      );
+    }
+  };
+
   const renderOAuthProviderCard = (provider: OAuthProviderCard, featured = false) => {
     const state = states[provider.id] || {};
     const showKimiSignUp =
@@ -873,7 +962,11 @@ export function OAuthPage() {
           </span>
         }
         extra={
-          showKimiSignUp ? (
+          provider.id === 'loomy' ? (
+            <Button onClick={() => sendLoomyCode(provider.id)} loading={state.smsBusy}>
+              {state.msgId ? t('auth_login.loomy_resend_code') : t('auth_login.loomy_send_code')}
+            </Button>
+          ) : showKimiSignUp ? (
             <div className={styles.featuredActions}>
               <Button
                 onClick={() =>
@@ -907,6 +1000,46 @@ export function OAuthPage() {
           <div className={featured ? styles.featuredHint : styles.cardHint}>
             {getProviderText(provider, 'oauth_hint')}
           </div>
+          {provider.id === 'loomy' && (
+            <div className={styles.callbackSection}>
+              <Input
+                label={t('auth_login.loomy_phone_label')}
+                hint={t('auth_login.loomy_phone_hint')}
+                value={state.phone || ''}
+                onChange={(e) => updateProviderState(provider.id, { phone: e.target.value })}
+                placeholder={t('auth_login.loomy_phone_placeholder')}
+                inputMode="numeric"
+                autoComplete="tel"
+                maxLength={11}
+                disabled={state.polling}
+              />
+              {state.msgId && (
+                <>
+                  <Input
+                    label={t('auth_login.loomy_code_label')}
+                    hint={t('auth_login.loomy_code_hint')}
+                    value={state.code || ''}
+                    onChange={(e) => updateProviderState(provider.id, { code: e.target.value })}
+                    placeholder={t('auth_login.loomy_code_placeholder')}
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    maxLength={8}
+                    disabled={state.polling}
+                  />
+                  <div className={styles.callbackActions}>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => submitLoomyCode(provider.id)}
+                      loading={state.polling}
+                    >
+                      {t('auth_login.loomy_submit')}
+                    </Button>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
           {state.url && (
             <div className={styles.authUrlBox}>
               <div className={styles.authUrlLabel}>

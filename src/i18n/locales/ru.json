@@ -515,7 +515,8 @@
     "filter_xiaohuanxiong": "Xiaohuanxiong (Raccoon)",
     "filter_codearts": "CodeArts (Huawei)",
     "filter_minimax": "MiniMax Code",
-    "filter_minimax-cn": "MiniMax Code (CN)"
+    "filter_minimax-cn": "MiniMax Code (CN)",
+    "filter_loomy": "Loomy"
   },
   "antigravity_subscription": {
     "plan_unknown": "Неизвестно",
@@ -1278,7 +1279,25 @@
     "lobsterai_server_open_link": "Открыть ссылку",
     "lobsterai_server_callback_label": "URL обратного вызова",
     "lobsterai_server_callback_hint": "Скопируйте полный URL http://127.0.0.1:18924/auth/callback?... из адресной строки браузера (сама страница может показать ошибку соединения) и вставьте его сюда.",
-    "lobsterai_server_callback_placeholder": "http://127.0.0.1:18924/auth/callback?code=...&state=..."
+    "lobsterai_server_callback_placeholder": "http://127.0.0.1:18924/auth/callback?code=...&state=...",
+    "loomy_phone_label": "Номер телефона",
+    "loomy_phone_hint": "Номер материкового Китая, 11 цифр, без кода страны.",
+    "loomy_phone_placeholder": "13800000000",
+    "loomy_send_code": "Отправить код",
+    "loomy_code_label": "Код из SMS",
+    "loomy_code_hint": "Введите код из SMS; он действует пять минут.",
+    "loomy_code_placeholder": "123456",
+    "loomy_submit": "Войти",
+    "loomy_login_error": "Не удалось войти:",
+    "loomy_missing_phone": "Сначала укажите номер телефона.",
+    "loomy_missing_code": "Введите код из SMS.",
+    "loomy_oauth_title": "Loomy (讯飞) — вход",
+    "loomy_oauth_hint": "Loomy выполняет вход по коду из SMS, без страницы авторизации в браузере. Укажите номер телефона, запросите код и отправьте его. Сеанс выдается на 14 дней и не продлевается, поэтому после истечения нужно войти снова.",
+    "loomy_oauth_status_waiting": "Ожидание кода из SMS…",
+    "loomy_oauth_status_success": "Вход выполнен!",
+    "loomy_oauth_status_error": "Не удалось войти:",
+    "loomy_oauth_start_error": "Не удалось отправить код:",
+    "loomy_resend_code": "Отправить снова"
   },
   "stats": {
     "success": "Успех",
@@ -2759,5 +2778,22 @@
     "checkin_available": "Доступна",
     "checkin_none": "Недоступна",
     "checkin_hint": "Получите награду за отметку в настольном приложении LobsterAI; прокси не делает это за вас."
+  },
+  "loomy_quota": {
+    "title": "Квота Loomy",
+    "empty_title": "Нет учетных данных Loomy",
+    "empty_desc": "Войдите в Loomy (讯飞), чтобы увидеть баланс баллов.",
+    "idle": "Нажмите, чтобы запросить квоту Loomy",
+    "loading": "Запрос квоты Loomy…",
+    "load_failed": "Не удалось запросить квоту: {{message}}",
+    "missing_auth_index": "В файле учетных данных нет auth_index",
+    "empty_data": "Нет данных о квоте",
+    "invalid_credential": "Учетные данные Loomy отклонены. Войдите снова.",
+    "quota_error": "Не удалось прочитать баланс учетной записи Loomy.",
+    "total_row": "Всего баллов",
+    "permanent_row": "Постоянные баллы",
+    "daily_row": "Дневная квота",
+    "daily_consumed_row": "Израсходовано за день",
+    "daily_hint": "Дневная квота начисляется на каждый рабочий день и не восполняется после расхода."
   }
 }

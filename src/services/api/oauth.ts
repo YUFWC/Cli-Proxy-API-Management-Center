@@ -28,7 +28,9 @@ export type BuiltInOAuthProvider =
   | 'codearts'
   | 'meta'
   | 'floatboat'
-  | 'lobsterai-server';
+  | 'lobsterai-server'
+  /** Phone SMS code login; unlike the others it has no URL-based start. */
+  | 'loomy';
 
 export interface OAuthStartResponse {
   url: string;
