@@ -8,6 +8,7 @@ import { IconPlug } from '@/components/ui/icons';
 import { useAuthStore, useNotificationStore, useThemeStore } from '@/stores';
 import { oauthApi, pluginsApi, type BuiltInOAuthProvider } from '@/services/api';
 import { loomyApi } from '@/services/api/loomy';
+import { airJellyApi } from '@/services/api/airjelly';
 import { vertexApi, type VertexImportResponse } from '@/services/api/vertex';
 import { copyToClipboard } from '@/utils/clipboard';
 import { getErrorMessage, isRecord } from '@/utils/helpers';
@@ -37,6 +38,7 @@ import iconCodeArts from '@/assets/icons/codearts.svg';
 import iconFloatboat from '@/assets/icons/floatboat.svg';
 import iconLobsteraiServer from '@/assets/icons/lobsterai.svg';
 import iconLoomy from '@/assets/icons/loomy.svg';
+import iconAirJelly from '@/assets/icons/airjelly.svg';
 import iconVertex from '@/assets/icons/vertex.svg';
 import iconGrok from '@/assets/icons/grok.svg';
 import iconGrokDark from '@/assets/icons/grok-dark.svg';
@@ -66,6 +68,8 @@ interface ProviderState {
   code?: string;
   /** Loomy SMS flow: the send step is in flight. */
   smsBusy?: boolean;
+  email?: string;
+  password?: string;
 }
 
 interface VertexImportResult {
@@ -232,6 +236,12 @@ const PROVIDERS: BuiltInOAuthProviderCard[] = [
     titleKey: 'auth_login.loomy_oauth_title',
     icon: iconLoomy,
   },
+  {
+    kind: 'builtin',
+    id: 'airjelly',
+    titleKey: 'auth_login.airjelly_oauth_title',
+    icon: iconAirJelly,
+  },
 ];
 
 const BUILTIN_PROVIDER_IDS = new Set<string>(PROVIDERS.map((provider) => provider.id));
@@ -258,6 +268,7 @@ const CALLBACK_SUPPORTED = new Set<string>([
   // the proxy's own loopback port is unreachable from a remote operator's
   // browser, so the user pastes the callback URL.
   'lobsterai-server',
+  'airjelly',
 ]);
 const XAI_CALLBACK_URL = 'http://127.0.0.1:56121/callback';
 const SUCCESS_RESET_DELAY_MS = 5000;
@@ -402,6 +413,7 @@ const DEDICATED_CALLBACK_COPY = new Set<string>([
   // LobsterAI lands on a loopback callback the remote browser cannot hand to the
   // proxy; the card needs provider-specific paste guidance.
   'lobsterai-server',
+  'airjelly',
 ]);
 
 const callbackTextKey = (
@@ -528,6 +540,7 @@ export function OAuthPage() {
       cancelling: false,
       cancelError: undefined,
       callbackUrl: '',
+      password: '',
       callbackSubmitting: false,
       callbackStatus: undefined,
       callbackError: undefined,
@@ -621,6 +634,19 @@ export function OAuthPage() {
     // Loomy has no URL-based start: its card runs the SMS steps instead.
     if (provider === 'loomy') {
       await sendLoomyCode(provider);
+      return;
+    }
+    if (provider === 'airjelly') {
+      const attempt = attempts.current.begin(provider);
+      updateProviderState(provider, { status: 'waiting', error: undefined, callbackUrl: '' });
+      try {
+        const res = await airJellyApi.startOAuth();
+        if (!attempt.isCurrent()) return;
+        updateProviderState(provider, { url: res.url, state: res.state, polling: false });
+      } catch (err: unknown) {
+        if (!attempt.isCurrent()) return;
+        updateProviderState(provider, { status: 'error', error: getErrorMessage(err) });
+      }
       return;
     }
     const attempt = attempts.current.begin(provider);
@@ -729,6 +755,13 @@ export function OAuthPage() {
       callbackError: undefined,
     });
     try {
+      if (provider === 'airjelly') {
+        await airJellyApi.completeOAuth(states[provider]?.state || '', redirectUrl);
+        if (!attempt.isCurrent()) return;
+        completeProviderAuth(provider);
+        showNotification(t('auth_login.airjelly_oauth_status_success'), 'success');
+        return;
+      }
       if (provider === 'xiaohuanxiong') {
         // The deep link carries no state, so submit the raw callback and let the
         // dedicated endpoint bind it to this pending session.
@@ -933,6 +966,27 @@ export function OAuthPage() {
     }
   };
 
+  const loginAirJellyPassword = async () => {
+    const provider = 'airjelly';
+    const email = (states[provider]?.email || '').trim();
+    const password = states[provider]?.password || '';
+    if (!email || !password) {
+      showNotification(t('auth_login.airjelly_missing_login'), 'warning');
+      return;
+    }
+    const attempt = attempts.current.begin(provider);
+    updateProviderState(provider, { polling: true, error: undefined, status: 'waiting' });
+    try {
+      await airJellyApi.login(email, password);
+      if (!attempt.isCurrent()) return;
+      completeProviderAuth(provider);
+      showNotification(t('auth_login.airjelly_oauth_status_success'), 'success');
+    } catch (err: unknown) {
+      if (!attempt.isCurrent()) return;
+      updateProviderState(provider, { polling: false, status: 'error', error: getErrorMessage(err) });
+    }
+  };
+
   const renderOAuthProviderCard = (provider: OAuthProviderCard, featured = false) => {
     const state = states[provider.id] || {};
     const showKimiSignUp =
@@ -1038,6 +1092,27 @@ export function OAuthPage() {
                   </div>
                 </>
               )}
+            </div>
+          )}
+          {provider.id === 'airjelly' && (
+            <div className={styles.callbackSection}>
+              <Input
+                label={t('auth_login.airjelly_email')}
+                type="email"
+                value={state.email || ''}
+                onChange={(e) => updateProviderState(provider.id, { email: e.target.value })}
+                autoComplete="email"
+              />
+              <Input
+                label={t('auth_login.airjelly_password')}
+                type="password"
+                value={state.password || ''}
+                onChange={(e) => updateProviderState(provider.id, { password: e.target.value })}
+                autoComplete="current-password"
+              />
+              <Button variant="secondary" size="sm" onClick={loginAirJellyPassword} loading={state.polling}>
+                {t('auth_login.airjelly_password_login')}
+              </Button>
             </div>
           )}
           {state.url && (
