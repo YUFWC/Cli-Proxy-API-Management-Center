@@ -1335,7 +1335,13 @@
     "airjelly_email": "電子郵件",
     "airjelly_password": "密碼",
     "airjelly_password_login": "電子郵件登入",
-    "airjelly_missing_login": "請輸入電子郵件與密碼。"
+    "airjelly_missing_login": "請輸入電子郵件與密碼。",
+    "airjelly_signup": "電子郵件註冊",
+    "airjelly_signup_code": "電子郵件驗證碼",
+    "airjelly_signup_verify": "驗證並登入",
+    "airjelly_signup_resend": "重發驗證碼",
+    "airjelly_signup_check_email": "請查看電子郵件並輸入驗證碼。",
+    "airjelly_missing_code": "請輸入電子郵件與驗證碼。"
   },
   "stats": {
     "success": "成功",

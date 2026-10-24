@@ -19,6 +19,12 @@ export const airJellyApi = {
     apiClient.post('/airjelly/oauth/complete', { state, callback_url: callbackUrl }),
   login: (email: string, password: string) =>
     apiClient.post('/airjelly/login', { email, password }),
+  signup: (email: string, password: string) =>
+    apiClient.post<{ status: 'ok' | 'confirmation_required' }>('/airjelly/signup', { email, password }),
+  verifySignup: (email: string, code: string) =>
+    apiClient.post('/airjelly/signup/verify', { email, code }),
+  resendSignupCode: (email: string) =>
+    apiClient.post('/airjelly/signup/resend', { email }),
   fetchQuota: (authIndex: string) =>
     apiClient.get<AirJellyQuotaPayload>('/airjelly-quota', { params: { auth_index: authIndex } }),
 };

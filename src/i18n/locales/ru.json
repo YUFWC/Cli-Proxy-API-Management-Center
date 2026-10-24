@@ -1314,7 +1314,13 @@
     "airjelly_email": "Email",
     "airjelly_password": "Password",
     "airjelly_password_login": "Sign in with email",
-    "airjelly_missing_login": "Enter email and password."
+    "airjelly_missing_login": "Enter email and password.",
+    "airjelly_signup": "Register with email",
+    "airjelly_signup_code": "Email verification code",
+    "airjelly_signup_verify": "Verify and sign in",
+    "airjelly_signup_resend": "Resend code",
+    "airjelly_signup_check_email": "Check your email for a verification code.",
+    "airjelly_missing_code": "Enter your email and verification code."
   },
   "stats": {
     "success": "Успех",

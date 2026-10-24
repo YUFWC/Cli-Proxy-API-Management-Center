@@ -70,6 +70,8 @@ interface ProviderState {
   smsBusy?: boolean;
   email?: string;
   password?: string;
+  signupCode?: string;
+  signupPending?: boolean;
 }
 
 interface VertexImportResult {
@@ -541,6 +543,8 @@ export function OAuthPage() {
       cancelError: undefined,
       callbackUrl: '',
       password: '',
+      signupCode: '',
+      signupPending: false,
       callbackSubmitting: false,
       callbackStatus: undefined,
       callbackError: undefined,
@@ -987,6 +991,70 @@ export function OAuthPage() {
     }
   };
 
+  const signupAirJelly = async () => {
+    const provider = 'airjelly';
+    const email = (states[provider]?.email || '').trim();
+    const password = states[provider]?.password || '';
+    if (!email || !password) {
+      showNotification(t('auth_login.airjelly_missing_login'), 'warning');
+      return;
+    }
+    const attempt = attempts.current.begin(provider);
+    updateProviderState(provider, { polling: true, error: undefined, status: 'waiting' });
+    try {
+      const result = await airJellyApi.signup(email, password);
+      if (!attempt.isCurrent()) return;
+      if (result.status === 'confirmation_required') {
+        updateProviderState(provider, { polling: false, status: 'idle', signupPending: true, password: '' });
+        showNotification(t('auth_login.airjelly_signup_check_email'), 'success');
+      } else {
+        completeProviderAuth(provider);
+        showNotification(t('auth_login.airjelly_oauth_status_success'), 'success');
+      }
+    } catch (err: unknown) {
+      if (!attempt.isCurrent()) return;
+      updateProviderState(provider, { polling: false, status: 'error', error: getErrorMessage(err) });
+    }
+  };
+
+  const verifyAirJellySignup = async () => {
+    const provider = 'airjelly';
+    const email = (states[provider]?.email || '').trim();
+    const code = (states[provider]?.signupCode || '').trim();
+    if (!email || !code) {
+      showNotification(t('auth_login.airjelly_missing_code'), 'warning');
+      return;
+    }
+    const attempt = attempts.current.begin(provider);
+    updateProviderState(provider, { polling: true, error: undefined });
+    try {
+      await airJellyApi.verifySignup(email, code);
+      if (!attempt.isCurrent()) return;
+      completeProviderAuth(provider);
+      showNotification(t('auth_login.airjelly_oauth_status_success'), 'success');
+    } catch (err: unknown) {
+      if (!attempt.isCurrent()) return;
+      updateProviderState(provider, { polling: false, status: 'error', error: getErrorMessage(err) });
+    }
+  };
+
+  const resendAirJellySignupCode = async () => {
+    const provider = 'airjelly';
+    const email = (states[provider]?.email || '').trim();
+    if (!email) return;
+    const attempt = attempts.current.begin(provider);
+    updateProviderState(provider, { polling: true, error: undefined });
+    try {
+      await airJellyApi.resendSignupCode(email);
+      if (!attempt.isCurrent()) return;
+      updateProviderState(provider, { polling: false });
+      showNotification(t('auth_login.airjelly_signup_check_email'), 'success');
+    } catch (err: unknown) {
+      if (!attempt.isCurrent()) return;
+      updateProviderState(provider, { polling: false, status: 'error', error: getErrorMessage(err) });
+    }
+  };
+
   const renderOAuthProviderCard = (provider: OAuthProviderCard, featured = false) => {
     const state = states[provider.id] || {};
     const showKimiSignUp =
@@ -1113,6 +1181,25 @@ export function OAuthPage() {
               <Button variant="secondary" size="sm" onClick={loginAirJellyPassword} loading={state.polling}>
                 {t('auth_login.airjelly_password_login')}
               </Button>
+              <Button variant="secondary" size="sm" onClick={signupAirJelly} loading={state.polling}>
+                {t('auth_login.airjelly_signup')}
+              </Button>
+              {state.signupPending && (
+                <>
+                  <Input
+                    label={t('auth_login.airjelly_signup_code')}
+                    value={state.signupCode || ''}
+                    onChange={(e) => updateProviderState(provider.id, { signupCode: e.target.value })}
+                    autoComplete="one-time-code"
+                  />
+                  <Button variant="secondary" size="sm" onClick={verifyAirJellySignup} loading={state.polling}>
+                    {t('auth_login.airjelly_signup_verify')}
+                  </Button>
+                  <Button variant="secondary" size="sm" onClick={resendAirJellySignupCode} loading={state.polling}>
+                    {t('auth_login.airjelly_signup_resend')}
+                  </Button>
+                </>
+              )}
             </div>
           )}
           {state.url && (

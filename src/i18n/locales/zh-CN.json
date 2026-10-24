@@ -1309,7 +1309,13 @@
     "airjelly_email": "邮箱",
     "airjelly_password": "密码",
     "airjelly_password_login": "邮箱登录",
-    "airjelly_missing_login": "请输入邮箱和密码。"
+    "airjelly_missing_login": "请输入邮箱和密码。",
+    "airjelly_signup": "邮箱注册",
+    "airjelly_signup_code": "邮箱验证码",
+    "airjelly_signup_verify": "验证并登录",
+    "airjelly_signup_resend": "重发验证码",
+    "airjelly_signup_check_email": "请查看邮箱并输入验证码。",
+    "airjelly_missing_code": "请输入邮箱和验证码。"
   },
   "stats": {
     "success": "成功",
