@@ -25,8 +25,8 @@ describe('CodeBuddy CN OAuth', () => {
     expect(response.state).toBe('codebuddy-state');
     expect(calls).toEqual([
       {
-        url: '/oauth/auth-url',
-        config: { params: { provider: 'codebuddy-cn' } },
+        url: '/codebuddy-cn-auth-url',
+        config: { params: undefined },
       },
     ]);
   });
