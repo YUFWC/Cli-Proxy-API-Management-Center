@@ -9,7 +9,7 @@ afterEach(() => {
 });
 
 describe('CodeBuddy CN OAuth', () => {
-  test('uses the backend device-flow management endpoint', async () => {
+  test('starts the device flow through the v8 management login endpoint', async () => {
     const calls: Array<{ url: string; config?: unknown }> = [];
     apiClient.get = (async (url: string, config?: unknown) => {
       calls.push({ url, config });
@@ -25,8 +25,8 @@ describe('CodeBuddy CN OAuth', () => {
     expect(response.state).toBe('codebuddy-state');
     expect(calls).toEqual([
       {
-        url: '/codebuddy-cn-auth-url',
-        config: { params: undefined },
+        url: '/oauth/auth-url',
+        config: { params: { provider: 'codebuddy-cn' } },
       },
     ]);
   });

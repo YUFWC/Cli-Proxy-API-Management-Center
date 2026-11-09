@@ -6,39 +6,45 @@ import { apiClient } from '../src/services/api/client';
 import { providersApi } from '../src/services/api/providers';
 import { normalizeConfigResponse } from '../src/services/api/transformers';
 import { AUTH_FILE_ICONS } from '../src/features/authFiles/constants';
+import { mockProviderGroupsBackend, withoutSource } from './helpers/providerGroupsBackend';
 
 const originalGet = apiClient.get;
 const originalPut = apiClient.put;
-const originalDelete = apiClient.delete;
 
 afterEach(() => {
   apiClient.get = originalGet;
   apiClient.put = originalPut;
-  apiClient.delete = originalDelete;
 });
 
 describe('Qoder CN provider', () => {
-  test('normalizes the backend qoder-cn-api-key contract and exposes a workbench resource', () => {
+  test('normalizes the backend api-keys.qoder-cn groups and exposes a workbench resource', () => {
     const config = normalizeConfigResponse({
-      'qoder-cn-api-key': [
-        {
-          'api-key': 'qoder-secret',
-          'refresh-token': 'qoder-refresh',
-          'machine-id': 'machine-uuid-1',
-          priority: 5,
-          prefix: 'qd',
-          'base-url': 'https://api2-v2.qoder.sh',
-          'proxy-url': 'http://proxy.local',
-          headers: { 'X-Custom': 'value' },
-          models: [{ name: 'claude-opus-4-6', alias: 'opus' }],
-          'excluded-models': ['claude-3-5-sonnet'],
-          'disable-cooling': true,
-          'auth-index': 'qoder-cn:apikey:1',
-        },
-      ],
+      'api-keys': {
+        'qoder-cn': [
+          {
+            name: 'qoder-cn-1',
+            'base-url': 'https://api2-v2.qoder.sh',
+            keys: [
+              {
+                'api-key': 'qoder-secret',
+                'refresh-token': 'qoder-refresh',
+                'machine-id': 'machine-uuid-1',
+                priority: 5,
+                prefix: 'qd',
+                'proxy-url': 'http://proxy.local',
+                headers: { 'X-Custom': 'value' },
+                models: [{ name: 'claude-opus-4-6', alias: 'opus' }],
+                'excluded-models': ['claude-3-5-sonnet'],
+                'disable-cooling': true,
+                'auth-index': 'qoder-cn:apikey:1',
+              },
+            ],
+          },
+        ],
+      },
     });
 
-    expect(config.qoderCnApiKeys).toEqual([
+    expect(withoutSource(config.qoderCnApiKeys)).toEqual([
       {
         apiKey: 'qoder-secret',
         refreshToken: 'qoder-refresh',
@@ -48,7 +54,7 @@ describe('Qoder CN provider', () => {
         baseUrl: 'https://api2-v2.qoder.sh',
         proxyUrl: 'http://proxy.local',
         headers: { 'X-Custom': 'value' },
-        models: [{ name: 'claude-opus-4-6', alias: 'opus' }],
+        models: [{ name: 'claude-opus-4-6', alias: 'opus', sourceIndex: 0 }],
         excludedModels: ['claude-3-5-sonnet'],
         disableCooling: true,
         authIndex: 'qoder-cn:apikey:1',
@@ -82,28 +88,14 @@ describe('Qoder CN provider', () => {
   });
 
   test('creates and deletes Qoder CN keys through the backend management contract', async () => {
-    const calls: Array<{ method: string; url: string; body?: unknown }> = [];
-    apiClient.get = (async (url: string) => {
-      calls.push({ method: 'GET', url });
-      return {
-        'qoder-cn-api-key': [
-          {
-            'api-key': 'existing',
-            'base-url': 'https://api2-v2.qoder.sh',
-            'machine-id': 'existing-machine',
-            'future-field': 'preserved',
-          },
-        ],
-      };
-    }) as typeof apiClient.get;
-    apiClient.put = (async (url: string, data?: unknown) => {
-      calls.push({ method: 'PUT', url, body: data });
-      return undefined;
-    }) as typeof apiClient.put;
-    apiClient.delete = (async (url: string) => {
-      calls.push({ method: 'DELETE', url });
-      return undefined;
-    }) as typeof apiClient.delete;
+    const existing = {
+      name: 'qoder-cn-1',
+      'base-url': 'https://api2-v2.qoder.sh',
+      keys: [
+        { 'api-key': 'existing', 'machine-id': 'existing-machine', 'future-field': 'preserved' },
+      ],
+    };
+    const backend = mockProviderGroupsBackend('qoder-cn', [existing]);
 
     await providersApi.createQoderCNConfig({
       apiKey: 'qoder-new',
@@ -112,50 +104,31 @@ describe('Qoder CN provider', () => {
     });
     await providersApi.deleteQoderCNConfig('qoder-new', 'https://api2-v2.qoder.sh');
 
-    expect(calls).toEqual([
+    const created = {
+      name: 'qoder-cn-2',
+      'base-url': 'https://api2-v2.qoder.sh',
+      keys: [{ 'api-key': 'qoder-new', 'machine-id': 'machine-uuid-2' }],
+    };
+    expect(backend.calls).toEqual([
+      { method: 'GET', url: '/config' },
+      { method: 'PUT', url: '/config/api-keys/qoder-cn', body: [existing, created] },
       { method: 'GET', url: '/config' },
       {
         method: 'PUT',
-        url: '/qoder-cn-api-key',
-        body: [
-          {
-            'api-key': 'existing',
-            'base-url': 'https://api2-v2.qoder.sh',
-            'machine-id': 'existing-machine',
-            'future-field': 'preserved',
-          },
-          {
-            'api-key': 'qoder-new',
-            'base-url': 'https://api2-v2.qoder.sh',
-            'machine-id': 'machine-uuid-2',
-          },
-        ],
-      },
-      {
-        method: 'DELETE',
-        url: '/qoder-cn-api-key?api-key=qoder-new&base-url=https%3A%2F%2Fapi2-v2.qoder.sh',
+        url: '/config/api-keys/qoder-cn',
+        body: [existing, { ...created, keys: [] }],
       },
     ]);
   });
 
   test('preserves unknown backend fields when updating a key', async () => {
-    const calls: Array<{ method: string; url: string; body?: unknown }> = [];
-    apiClient.get = (async (url: string) => {
-      calls.push({ method: 'GET', url });
-      return {
-        'qoder-cn-api-key': [
-          {
-            'api-key': 'existing',
-            'base-url': 'https://api2-v2.qoder.sh',
-            'future-field': 'preserved',
-          },
-        ],
-      };
-    }) as typeof apiClient.get;
-    apiClient.put = (async (url: string, data?: unknown) => {
-      calls.push({ method: 'PUT', url, body: data });
-      return undefined;
-    }) as typeof apiClient.put;
+    const backend = mockProviderGroupsBackend('qoder-cn', [
+      {
+        name: 'qoder-cn-1',
+        'base-url': 'https://api2-v2.qoder.sh',
+        keys: [{ 'api-key': 'existing', 'future-field': 'preserved' }],
+      },
+    ]);
 
     await providersApi.updateQoderCNConfig('existing', 'https://api2-v2.qoder.sh', {
       apiKey: 'existing',
@@ -163,10 +136,14 @@ describe('Qoder CN provider', () => {
       machineId: 'rotated-machine',
     });
 
-    const put = calls.find((call) => call.method === 'PUT');
-    expect(put).toBeDefined();
-    const body = put!.body as Array<Record<string, unknown>>;
-    expect(body[0]['future-field']).toBe('preserved');
-    expect(body[0]['machine-id']).toBe('rotated-machine');
+    expect(backend.groups()).toEqual([
+      {
+        name: 'qoder-cn-1',
+        'base-url': 'https://api2-v2.qoder.sh',
+        keys: [
+          { 'api-key': 'existing', 'future-field': 'preserved', 'machine-id': 'rotated-machine' },
+        ],
+      },
+    ]);
   });
 });

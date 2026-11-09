@@ -13,15 +13,16 @@ import { oauthApi, type BuiltInOAuthProvider } from '@/services/api/oauth';
 import { normalizeConfigResponse } from '@/services/api/transformers';
 import { providersApi } from '@/services/api/providers';
 import type { ProviderKeyConfig } from '@/types';
+import { mockProviderGroupsBackend, withoutSource } from './helpers/providerGroupsBackend';
 
 const originalGet = apiClient.get;
 const originalPut = apiClient.put;
-const originalDelete = apiClient.delete;
+const originalPost = apiClient.post;
 
 afterEach(() => {
   apiClient.get = originalGet;
   apiClient.put = originalPut;
-  apiClient.delete = originalDelete;
+  apiClient.post = originalPost;
 });
 
 /** getTypeLabel looks up `auth_files.filter_<provider>` via i18next. */
@@ -90,50 +91,45 @@ describe('Cline provider', () => {
     });
   });
 
-  test('normalizes the backend cline-api-key contract', () => {
+  test('normalizes the backend api-keys.cline groups', () => {
     const config = normalizeConfigResponse({
-      'cline-api-key': [
-        {
-          'api-key': 'workos:access',
-          'refresh-token': '  refresh-token-value  ',
-          priority: 2,
-          prefix: 'cl',
-          'base-url': 'https://api.cline.bot/api/v1',
-          models: [{ name: 'anthropic/claude-opus-4.8', alias: 'claude-opus' }],
-          'excluded-models': ['openrouter/free'],
-          'auth-index': 'cline:apikey:1',
-        },
-      ],
+      'api-keys': {
+        cline: [
+          {
+            name: 'cline-1',
+            'base-url': 'https://api.cline.bot/api/v1',
+            keys: [
+              {
+                'api-key': 'workos:access',
+                'refresh-token': '  refresh-token-value  ',
+                priority: 2,
+                prefix: 'cl',
+                models: [{ name: 'anthropic/claude-opus-4.8', alias: 'claude-opus' }],
+                'excluded-models': ['openrouter/free'],
+                'auth-index': 'cline:apikey:1',
+              },
+            ],
+          },
+        ],
+      },
     });
 
-    expect(config.clineApiKeys).toEqual([
+    expect(withoutSource(config.clineApiKeys)).toEqual([
       {
         apiKey: 'workos:access',
         refreshToken: 'refresh-token-value',
         priority: 2,
         prefix: 'cl',
         baseUrl: 'https://api.cline.bot/api/v1',
-        models: [{ name: 'anthropic/claude-opus-4.8', alias: 'claude-opus' }],
+        models: [{ name: 'anthropic/claude-opus-4.8', alias: 'claude-opus', sourceIndex: 0 }],
         excludedModels: ['openrouter/free'],
         authIndex: 'cline:apikey:1',
       },
     ]);
   });
 
-  test('writes and deletes cline-api-key through the backend management contract', async () => {
-    const calls: Array<{ method: string; url: string; body?: unknown }> = [];
-    apiClient.get = (async (url: string) => {
-      calls.push({ method: 'GET', url });
-      return { 'cline-api-key': [] };
-    }) as typeof apiClient.get;
-    apiClient.put = (async (url: string, data?: unknown) => {
-      calls.push({ method: 'PUT', url, body: data });
-      return undefined;
-    }) as typeof apiClient.put;
-    apiClient.delete = (async (url: string) => {
-      calls.push({ method: 'DELETE', url });
-      return undefined;
-    }) as typeof apiClient.delete;
+  test('writes and deletes api-keys.cline through the backend management contract', async () => {
+    const backend = mockProviderGroupsBackend('cline', []);
 
     await providersApi.createClineConfig({
       apiKey: 'workos:access',
@@ -142,23 +138,16 @@ describe('Cline provider', () => {
     });
     await providersApi.deleteClineConfig('workos:access', 'https://api.cline.bot/api/v1');
 
-    expect(calls).toEqual([
+    const created = {
+      name: 'cline-1',
+      'base-url': 'https://api.cline.bot/api/v1',
+      keys: [{ 'api-key': 'workos:access', 'refresh-token': 'refresh-token-value' }],
+    };
+    expect(backend.calls).toEqual([
       { method: 'GET', url: '/config' },
-      {
-        method: 'PUT',
-        url: '/cline-api-key',
-        body: [
-          {
-            'api-key': 'workos:access',
-            'refresh-token': 'refresh-token-value',
-            'base-url': 'https://api.cline.bot/api/v1',
-          },
-        ],
-      },
-      {
-        method: 'DELETE',
-        url: '/cline-api-key?api-key=workos%3Aaccess&base-url=https%3A%2F%2Fapi.cline.bot%2Fapi%2Fv1',
-      },
+      { method: 'PUT', url: '/config/api-keys/cline', body: [created] },
+      { method: 'GET', url: '/config' },
+      { method: 'PUT', url: '/config/api-keys/cline', body: [{ ...created, keys: [] }] },
     ]);
   });
 
@@ -170,7 +159,11 @@ describe('Cline provider', () => {
     const calls: string[] = [];
     apiClient.get = (async (url: string) => {
       calls.push(`GET ${url}`);
-      return { url: 'https://api.cline.bot/api/v1/auth/authorize', state: 's', flow: 'manual' } as never;
+      return {
+        url: 'https://api.cline.bot/api/v1/auth/authorize',
+        state: 's',
+        flow: 'manual',
+      } as never;
     }) as never;
     apiClient.post = (async (url: string) => {
       calls.push(`POST ${url}`);
@@ -179,7 +172,7 @@ describe('Cline provider', () => {
 
     const start = await oauthApi.startAuth('cline');
     expect(start.url).toContain('api.cline.bot');
-    expect(calls).toContain('GET /cline-auth-url');
+    expect(calls).toContain('GET /oauth/auth-url');
 
     await oauthApi.submitClineCallback('s', 'http://127.0.0.1:18080/callback?code=abc');
     expect(calls).toContain('POST /cline-auth-callback');
