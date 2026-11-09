@@ -91,7 +91,9 @@ describe('Qoder CN provider', () => {
     const existing = {
       name: 'qoder-cn-1',
       'base-url': 'https://api2-v2.qoder.sh',
-      keys: [{ 'api-key': 'existing', 'machine-id': 'existing-machine', 'future-field': 'preserved' }],
+      keys: [
+        { 'api-key': 'existing', 'machine-id': 'existing-machine', 'future-field': 'preserved' },
+      ],
     };
     const backend = mockProviderGroupsBackend('qoder-cn', [existing]);
 
@@ -138,7 +140,9 @@ describe('Qoder CN provider', () => {
       {
         name: 'qoder-cn-1',
         'base-url': 'https://api2-v2.qoder.sh',
-        keys: [{ 'api-key': 'existing', 'future-field': 'preserved', 'machine-id': 'rotated-machine' }],
+        keys: [
+          { 'api-key': 'existing', 'future-field': 'preserved', 'machine-id': 'rotated-machine' },
+        ],
       },
     ]);
   });
