@@ -225,7 +225,9 @@ describe('cooldown section rendering', () => {
 
     const available = render(snapshot, { onReset: () => {} });
     expect(available).toContain(i18n.t('auth_files.cooldown_reset_button'));
-    expect(available).toContain(i18n.t('auth_files.cooldown_reset_hint'));
+    // The hint is the reset button's tooltip; React escapes the apostrophe in the attribute.
+    const hint = i18n.t('auth_files.cooldown_reset_hint').replace(/'/g, '&#x27;');
+    expect(available).toContain(`title="${hint}"`);
     expect(available).not.toContain('disabled=""');
 
     const pending = render(snapshot, { onReset: () => {}, resetting: true });
