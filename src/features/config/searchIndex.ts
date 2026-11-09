@@ -497,7 +497,7 @@ export const CONFIG_FIELD_SEARCH_INDEX: ConfigFieldSearchEntry[] = [
     sectionId: 'logging',
     labelKey: L('sections.system.metrics_enabled'),
     hintKey: L('sections.system.metrics_enabled_desc'),
-    yamlKeys: ['metrics-enabled'],
+    yamlKeys: ['observability', 'metrics-enabled'],
   },
   {
     fieldId: 'logsMaxTotalSizeMb',
@@ -700,7 +700,7 @@ export const CONFIG_FIELD_SEARCH_INDEX: ConfigFieldSearchEntry[] = [
     sectionId: 'advanced',
     labelKey: L('sections.system_prompt_override.title'),
     qualifierKey: L('sections.advanced.system_prompt_override_title'),
-    yamlKeys: ['system-prompt-override'],
+    yamlKeys: ['requests', 'system-prompt-override'],
     keywords: ['system prompt', 'override', 'inject', '提示词'],
   },
   // ── payload (coarse: one entry per rule group) ──────────────────────────────
