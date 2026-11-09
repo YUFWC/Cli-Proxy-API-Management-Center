@@ -141,7 +141,6 @@ describe('visual config system prompt override', () => {
   });
 });
 
-
 describe('visual config system prompt override extended fields', () => {
   test('parses prompt-file and replacement rules from yaml', () => {
     function Harness() {
@@ -217,6 +216,8 @@ describe('visual config system prompt override extended fields', () => {
     const override = requests['system-prompt-override'] as Record<string, unknown>;
     expect(override['prompt-file']).toBe('/etc/purge/inject.md');
     // Empty rules are dropped on write.
-    expect(override['replacements']).toEqual([{ find: 'denial is final', replace: 'continue the task' }]);
+    expect(override['replacements']).toEqual([
+      { find: 'denial is final', replace: 'continue the task' },
+    ]);
   });
 });
