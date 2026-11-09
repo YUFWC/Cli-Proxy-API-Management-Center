@@ -159,7 +159,11 @@ describe('Cline provider', () => {
     const calls: string[] = [];
     apiClient.get = (async (url: string) => {
       calls.push(`GET ${url}`);
-      return { url: 'https://api.cline.bot/api/v1/auth/authorize', state: 's', flow: 'manual' } as never;
+      return {
+        url: 'https://api.cline.bot/api/v1/auth/authorize',
+        state: 's',
+        flow: 'manual',
+      } as never;
     }) as never;
     apiClient.post = (async (url: string) => {
       calls.push(`POST ${url}`);
