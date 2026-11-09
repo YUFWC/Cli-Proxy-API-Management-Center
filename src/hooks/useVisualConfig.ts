@@ -1393,7 +1393,10 @@ function getNextDirtyFields(
     const baselineOverride = baselineValues.systemPromptOverride;
     const nextOverride = nextValues.systemPromptOverride;
     if (Object.prototype.hasOwnProperty.call(overridePatch, 'enabled')) {
-      updateDirty('systemPromptOverride.enabled', nextOverride.enabled === baselineOverride.enabled);
+      updateDirty(
+        'systemPromptOverride.enabled',
+        nextOverride.enabled === baselineOverride.enabled
+      );
     }
     if (Object.prototype.hasOwnProperty.call(overridePatch, 'prompt')) {
       updateDirty('systemPromptOverride.prompt', nextOverride.prompt === baselineOverride.prompt);
@@ -1656,7 +1659,9 @@ function parseVisualValuesFromYaml(yamlContent: string): VisualConfigValues {
         excludedProviders: parseStringList(spo?.['excluded-providers']),
         models: parseStringList(spo?.models),
         replacements: parsePromptReplacementRules(spo?.replacements),
-        toolDescriptionReplacements: parsePromptReplacementRules(spo?.['tool-description-replacements']),
+        toolDescriptionReplacements: parsePromptReplacementRules(
+          spo?.['tool-description-replacements']
+        ),
       };
     })(),
   };
