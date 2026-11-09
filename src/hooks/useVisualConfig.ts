@@ -1519,7 +1519,6 @@ function parseVisualValuesFromYaml(yamlContent: string): VisualConfigValues {
   const v8Multimedia = asRecord(parsed?.['multimedia']);
   const v8Observability = asRecord(parsed?.['observability']);
   const v8ObservabilityLogs = asRecord(v8Observability?.['logs']);
-  const v8ObservabilityMetrics = asRecord(v8Observability?.['metrics']);
   const v8ObservabilityUsage = asRecord(v8Observability?.['usage']);
   const tls = asRecord(v8Server?.['tls']);
   const remoteManagement = asRecord(parsed['management']);
@@ -1562,7 +1561,7 @@ function parseVisualValuesFromYaml(yamlContent: string): VisualConfigValues {
     debug: Boolean(v8ObservabilityLogs?.['debug']),
     commercialMode: Boolean(v8Server?.['commercial-mode']),
     loggingToFile: Boolean(v8ObservabilityLogs?.['logging-to-file']),
-    metricsEnabled: Boolean(v8ObservabilityMetrics?.['enabled']),
+    metricsEnabled: Boolean(v8Observability?.['metrics-enabled']),
     logsMaxTotalSizeMb: String(v8ObservabilityLogs?.['logs-max-total-size-mb'] ?? ''),
     errorLogsMaxFiles: String(v8ObservabilityLogs?.['error-logs-max-files'] ?? ''),
     usageStatisticsEnabled: Boolean(v8ObservabilityUsage?.['usage-statistics-enabled']),
@@ -1891,7 +1890,7 @@ export function useVisualConfig() {
           setBooleanInDoc(doc, ['observability', 'logs', 'logging-to-file'], values.loggingToFile);
         }
         if (dirtyFields.has('metricsEnabled')) {
-          setBooleanInDoc(doc, ['metrics-enabled'], values.metricsEnabled);
+          setBooleanInDoc(doc, ['observability', 'metrics-enabled'], values.metricsEnabled);
         }
         if (dirtyFields.has('logsMaxTotalSizeMb')) {
           setIntFromStringInDoc(
@@ -2185,40 +2184,56 @@ export function useVisualConfig() {
         );
         if (systemPromptOverrideDirty) {
           const override = values.systemPromptOverride;
-          ensureMapInDoc(doc, ['system-prompt-override']);
+          ensureMapInDoc(doc, ['requests', 'system-prompt-override']);
           if (dirtyFields.has('systemPromptOverride.enabled')) {
-            setBooleanInDoc(doc, ['system-prompt-override', 'enabled'], override.enabled);
+            setBooleanInDoc(
+              doc,
+              ['requests', 'system-prompt-override', 'enabled'],
+              override.enabled
+            );
           }
           if (dirtyFields.has('systemPromptOverride.prompt')) {
-            setStringInDoc(doc, ['system-prompt-override', 'prompt'], override.prompt);
+            setStringInDoc(doc, ['requests', 'system-prompt-override', 'prompt'], override.prompt);
           }
           if (dirtyFields.has('systemPromptOverride.providers')) {
-            setStringListInDoc(doc, ['system-prompt-override', 'providers'], override.providers);
+            setStringListInDoc(
+              doc,
+              ['requests', 'system-prompt-override', 'providers'],
+              override.providers
+            );
           }
           if (dirtyFields.has('systemPromptOverride.excludedProviders')) {
             setStringListInDoc(
               doc,
-              ['system-prompt-override', 'excluded-providers'],
+              ['requests', 'system-prompt-override', 'excluded-providers'],
               override.excludedProviders
             );
           }
           if (dirtyFields.has('systemPromptOverride.models')) {
-            setStringListInDoc(doc, ['system-prompt-override', 'models'], override.models);
+            setStringListInDoc(
+              doc,
+              ['requests', 'system-prompt-override', 'models'],
+              override.models
+            );
           }
           if (dirtyFields.has('systemPromptOverride.promptFile')) {
-            setStringInDoc(doc, ['system-prompt-override', 'prompt-file'], override.promptFile);
+            setStringInDoc(
+              doc,
+              ['requests', 'system-prompt-override', 'prompt-file'],
+              override.promptFile
+            );
           }
           if (dirtyFields.has('systemPromptOverride.replacements')) {
             setPromptReplacementRulesInDoc(
               doc,
-              ['system-prompt-override', 'replacements'],
+              ['requests', 'system-prompt-override', 'replacements'],
               override.replacements
             );
           }
           if (dirtyFields.has('systemPromptOverride.toolDescriptionReplacements')) {
             setPromptReplacementRulesInDoc(
               doc,
-              ['system-prompt-override', 'tool-description-replacements'],
+              ['requests', 'system-prompt-override', 'tool-description-replacements'],
               override.toolDescriptionReplacements
             );
           }
