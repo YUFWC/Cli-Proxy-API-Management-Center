@@ -27,7 +27,7 @@ const i18n = createInstance();
 await i18n.init({ lng: 'en', resources: { en: { translation: en } } });
 
 describe('MiniMax Code OAuth', () => {
-  test('uses the backend device-flow management endpoints', async () => {
+  test('starts both device flows through the v8 management login endpoint', async () => {
     const calls: Array<{ url: string; config?: unknown }> = [];
     apiClient.get = (async (url: string, config?: unknown) => {
       calls.push({ url, config });
@@ -40,8 +40,8 @@ describe('MiniMax Code OAuth', () => {
     await oauthApi.startAuth(cn);
 
     expect(calls).toEqual([
-      { url: '/minimax-auth-url', config: { params: undefined } },
-      { url: '/minimax-cn-auth-url', config: { params: undefined } },
+      { url: '/oauth/auth-url', config: { params: { provider: 'minimax' } } },
+      { url: '/oauth/auth-url', config: { params: { provider: 'minimax-cn' } } },
     ]);
   });
 
