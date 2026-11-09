@@ -9,15 +9,14 @@ import { AUTH_FILE_ICONS } from '../src/features/authFiles/constants';
 import { isQoderAIFile, isQoderCNFile } from '../src/utils/quota';
 import { QODERCN_CONFIG } from '../src/features/quota/providers/qodercn/data';
 import type { AuthFileItem } from '../src/types';
+import { mockProviderGroupsBackend, withoutSource } from './helpers/providerGroupsBackend';
 
 const originalGet = apiClient.get;
 const originalPut = apiClient.put;
-const originalDelete = apiClient.delete;
 
 afterEach(() => {
   apiClient.get = originalGet;
   apiClient.put = originalPut;
-  apiClient.delete = originalDelete;
 });
 
 const qoderFile = (provider: string): AuthFileItem => ({
@@ -27,27 +26,34 @@ const qoderFile = (provider: string): AuthFileItem => ({
 });
 
 describe('Qoder AI (international) provider', () => {
-  test('normalizes the backend qoder-ai-api-key contract and exposes a workbench resource', () => {
+  test('normalizes the backend api-keys.qoder-ai groups and exposes a workbench resource', () => {
     const config = normalizeConfigResponse({
-      'qoder-ai-api-key': [
-        {
-          'api-key': 'qoder-ai-secret',
-          'refresh-token': 'qoder-ai-refresh',
-          'machine-id': 'machine-uuid-ai',
-          priority: 3,
-          prefix: 'qdai',
-          'base-url': 'https://api3.qoder.sh',
-          'proxy-url': 'http://proxy.local',
-          headers: { 'X-Custom': 'value' },
-          models: [{ name: 'qmodel_38max', alias: 'qwen-max' }],
-          'excluded-models': ['gmodel'],
-          'disable-cooling': true,
-          'auth-index': 'qoder-ai:apikey:1',
-        },
-      ],
+      'api-keys': {
+        'qoder-ai': [
+          {
+            name: 'qoder-ai-1',
+            'base-url': 'https://api3.qoder.sh',
+            keys: [
+              {
+                'api-key': 'qoder-ai-secret',
+                'refresh-token': 'qoder-ai-refresh',
+                'machine-id': 'machine-uuid-ai',
+                priority: 3,
+                prefix: 'qdai',
+                'proxy-url': 'http://proxy.local',
+                headers: { 'X-Custom': 'value' },
+                models: [{ name: 'qmodel_38max', alias: 'qwen-max' }],
+                'excluded-models': ['gmodel'],
+                'disable-cooling': true,
+                'auth-index': 'qoder-ai:apikey:1',
+              },
+            ],
+          },
+        ],
+      },
     });
 
-    expect(config.qoderAiApiKeys).toEqual([
+    expect(withoutSource(config.qoderAiApiKeys)).toEqual([
       {
         apiKey: 'qoder-ai-secret',
         refreshToken: 'qoder-ai-refresh',
@@ -57,7 +63,7 @@ describe('Qoder AI (international) provider', () => {
         baseUrl: 'https://api3.qoder.sh',
         proxyUrl: 'http://proxy.local',
         headers: { 'X-Custom': 'value' },
-        models: [{ name: 'qmodel_38max', alias: 'qwen-max' }],
+        models: [{ name: 'qmodel_38max', alias: 'qwen-max', sourceIndex: 0 }],
         excludedModels: ['gmodel'],
         disableCooling: true,
         authIndex: 'qoder-ai:apikey:1',
@@ -89,24 +95,13 @@ describe('Qoder AI (international) provider', () => {
     expect(AUTH_FILE_ICONS['qoder-ai']).toBeDefined();
   });
 
-  test('writes the qoder-ai-api-key section through the management contract', async () => {
-    const calls: Array<{ method: string; url: string; body?: unknown }> = [];
-    apiClient.get = (async (url: string) => {
-      calls.push({ method: 'GET', url });
-      return {
-        'qoder-ai-api-key': [
-          { 'api-key': 'existing', 'base-url': 'https://api3.qoder.sh', 'future-field': 'kept' },
-        ],
-      };
-    }) as typeof apiClient.get;
-    apiClient.put = (async (url: string, data?: unknown) => {
-      calls.push({ method: 'PUT', url, body: data });
-      return undefined;
-    }) as typeof apiClient.put;
-    apiClient.delete = (async (url: string) => {
-      calls.push({ method: 'DELETE', url });
-      return undefined;
-    }) as typeof apiClient.delete;
+  test('writes the api-keys.qoder-ai groups through the management contract', async () => {
+    const existing = {
+      name: 'qoder-ai-1',
+      'base-url': 'https://api3.qoder.sh',
+      keys: [{ 'api-key': 'existing', 'future-field': 'kept' }],
+    };
+    const backend = mockProviderGroupsBackend('qoder-ai', [existing]);
 
     await providersApi.createQoderAIConfig({
       apiKey: 'qoder-ai-new',
@@ -115,23 +110,19 @@ describe('Qoder AI (international) provider', () => {
     });
     await providersApi.deleteQoderAIConfig('qoder-ai-new', 'https://api3.qoder.sh');
 
-    expect(calls).toEqual([
+    const created = {
+      name: 'qoder-ai-2',
+      'base-url': 'https://api3.qoder.sh',
+      keys: [{ 'api-key': 'qoder-ai-new', 'machine-id': 'machine-uuid-2' }],
+    };
+    expect(backend.calls).toEqual([
+      { method: 'GET', url: '/config' },
+      { method: 'PUT', url: '/config/api-keys/qoder-ai', body: [existing, created] },
       { method: 'GET', url: '/config' },
       {
         method: 'PUT',
-        url: '/qoder-ai-api-key',
-        body: [
-          { 'api-key': 'existing', 'base-url': 'https://api3.qoder.sh', 'future-field': 'kept' },
-          {
-            'api-key': 'qoder-ai-new',
-            'base-url': 'https://api3.qoder.sh',
-            'machine-id': 'machine-uuid-2',
-          },
-        ],
-      },
-      {
-        method: 'DELETE',
-        url: '/qoder-ai-api-key?api-key=qoder-ai-new&base-url=https%3A%2F%2Fapi3.qoder.sh',
+        url: '/config/api-keys/qoder-ai',
+        body: [existing, { ...created, keys: [] }],
       },
     ]);
   });
