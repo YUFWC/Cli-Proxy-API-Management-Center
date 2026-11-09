@@ -11,39 +11,45 @@ import { providersApi } from '../src/services/api/providers';
 import { normalizeConfigResponse } from '../src/services/api/transformers';
 import { isCodeBuddyAiFile, isCodeBuddyFile } from '../src/utils/quota/validators';
 import type { AuthFileItem } from '../src/types';
+import { mockProviderGroupsBackend, withoutSource } from './helpers/providerGroupsBackend';
 
 const originalGet = apiClient.get;
 const originalPut = apiClient.put;
-const originalDelete = apiClient.delete;
 const originalApiCallRequest = apiCallApi.request;
 
 afterEach(() => {
   apiClient.get = originalGet;
   apiClient.put = originalPut;
-  apiClient.delete = originalDelete;
   apiCallApi.request = originalApiCallRequest;
 });
 
 describe('CodeBuddy AI (international) provider', () => {
-  test('normalizes the backend codebuddy-ai-api-key contract and exposes a workbench resource', () => {
+  test('normalizes the backend api-keys.codebuddy-ai groups and exposes a workbench resource', () => {
     const config = normalizeConfigResponse({
-      'codebuddy-ai-api-key': [
-        {
-          'api-key': 'cbai-secret',
-          priority: 3,
-          prefix: 'cba',
-          'base-url': 'https://www.codebuddy.ai/v2',
-          'proxy-url': 'http://proxy.local',
-          headers: { 'X-Custom': 'value' },
-          models: [{ name: 'gpt-5.5', alias: 'gpt-latest' }],
-          'excluded-models': ['gemini-2.5-pro'],
-          'disable-cooling': true,
-          'auth-index': 'codebuddy-ai:apikey:1',
-        },
-      ],
+      'api-keys': {
+        'codebuddy-ai': [
+          {
+            name: 'codebuddy-ai-1',
+            'base-url': 'https://www.codebuddy.ai/v2',
+            keys: [
+              {
+                'api-key': 'cbai-secret',
+                priority: 3,
+                prefix: 'cba',
+                'proxy-url': 'http://proxy.local',
+                headers: { 'X-Custom': 'value' },
+                models: [{ name: 'gpt-5.5', alias: 'gpt-latest' }],
+                'excluded-models': ['gemini-2.5-pro'],
+                'disable-cooling': true,
+                'auth-index': 'codebuddy-ai:apikey:1',
+              },
+            ],
+          },
+        ],
+      },
     });
 
-    expect(config.codebuddyAiApiKeys).toEqual([
+    expect(withoutSource(config.codebuddyAiApiKeys)).toEqual([
       {
         apiKey: 'cbai-secret',
         priority: 3,
@@ -51,7 +57,7 @@ describe('CodeBuddy AI (international) provider', () => {
         baseUrl: 'https://www.codebuddy.ai/v2',
         proxyUrl: 'http://proxy.local',
         headers: { 'X-Custom': 'value' },
-        models: [{ name: 'gpt-5.5', alias: 'gpt-latest' }],
+        models: [{ name: 'gpt-5.5', alias: 'gpt-latest', sourceIndex: 0 }],
         excludedModels: ['gemini-2.5-pro'],
         disableCooling: true,
         authIndex: 'codebuddy-ai:apikey:1',
@@ -80,27 +86,12 @@ describe('CodeBuddy AI (international) provider', () => {
   });
 
   test('creates and deletes international keys through the backend management contract', async () => {
-    const calls: Array<{ method: string; url: string; body?: unknown }> = [];
-    apiClient.get = (async (url: string) => {
-      calls.push({ method: 'GET', url });
-      return {
-        'codebuddy-ai-api-key': [
-          {
-            'api-key': 'existing',
-            'base-url': 'https://www.codebuddy.ai/v2',
-            'future-field': 'preserved',
-          },
-        ],
-      };
-    }) as typeof apiClient.get;
-    apiClient.put = (async (url: string, data?: unknown) => {
-      calls.push({ method: 'PUT', url, body: data });
-      return undefined;
-    }) as typeof apiClient.put;
-    apiClient.delete = (async (url: string) => {
-      calls.push({ method: 'DELETE', url });
-      return undefined;
-    }) as typeof apiClient.delete;
+    const existing = {
+      name: 'codebuddy-ai-1',
+      'base-url': 'https://www.codebuddy.ai/v2',
+      keys: [{ 'api-key': 'existing', 'future-field': 'preserved' }],
+    };
+    const backend = mockProviderGroupsBackend('codebuddy-ai', [existing]);
 
     await providersApi.createCodeBuddyAIConfig({
       apiKey: 'cbai-new',
@@ -108,31 +99,24 @@ describe('CodeBuddy AI (international) provider', () => {
     });
     await providersApi.deleteCodeBuddyAIConfig('cbai-new', 'https://www.codebuddy.ai/v2');
 
-    expect(calls).toEqual([
+    const created = {
+      name: 'codebuddy-ai-2',
+      'base-url': 'https://www.codebuddy.ai/v2',
+      keys: [{ 'api-key': 'cbai-new' }],
+    };
+    expect(backend.calls).toEqual([
+      { method: 'GET', url: '/config' },
+      { method: 'PUT', url: '/config/api-keys/codebuddy-ai', body: [existing, created] },
       { method: 'GET', url: '/config' },
       {
         method: 'PUT',
-        url: '/codebuddy-ai-api-key',
-        body: [
-          {
-            'api-key': 'existing',
-            'base-url': 'https://www.codebuddy.ai/v2',
-            'future-field': 'preserved',
-          },
-          {
-            'api-key': 'cbai-new',
-            'base-url': 'https://www.codebuddy.ai/v2',
-          },
-        ],
-      },
-      {
-        method: 'DELETE',
-        url: '/codebuddy-ai-api-key?api-key=cbai-new&base-url=https%3A%2F%2Fwww.codebuddy.ai%2Fv2',
+        url: '/config/api-keys/codebuddy-ai',
+        body: [existing, { ...created, keys: [] }],
       },
     ]);
   });
 
-  test('uses the backend device-flow management endpoint for OAuth', async () => {
+  test('starts OAuth through the v8 management login endpoint', async () => {
     const calls: Array<{ url: string; config?: unknown }> = [];
     apiClient.get = (async (url: string, config?: unknown) => {
       calls.push({ url, config });
@@ -148,8 +132,8 @@ describe('CodeBuddy AI (international) provider', () => {
     expect(response.state).toBe('codebuddy-ai-state');
     expect(calls).toEqual([
       {
-        url: '/codebuddy-ai-auth-url',
-        config: { params: undefined },
+        url: '/oauth/auth-url',
+        config: { params: { provider: 'codebuddy-ai' } },
       },
     ]);
   });
